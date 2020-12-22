@@ -14,6 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MappingController {
 
+    @GetMapping ( { "/login", "/login.html" } )
+    public String login ( final Model model ) {
+        return "login";
+    }
+
     /**
      * On a GET request to /index, the IndexController will return
      * /src/main/resources/templates/index.html.
