@@ -2,6 +2,7 @@ package edu.ncsu.csc.iTrust2.controllers;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,9 @@ import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
 @Controller
 public class UserController {
 
+    @Autowired
+    private LoggerUtil util;
+
     /**
      * Controller for iTrust2 personnel to modify their demographics.
      * The @PreAuthorize tag will have to be extended if new classes of users
@@ -35,7 +39,7 @@ public class UserController {
     @GetMapping ( value = "personnel/editDemographics" )
     @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_OD', 'ROLE_OPH', 'ROLE_ADMIN', 'ROLE_ER', 'ROLE_LABTECH', 'ROLE_VIROLOGIST')" )
     public String viewDemographics ( final Model model ) {
-        LoggerUtil.log( TransactionType.VIEW_DEMOGRAPHICS, LoggerUtil.currentUser() );
+        util.log( TransactionType.VIEW_DEMOGRAPHICS, LoggerUtil.currentUser() );
         return "/personnel/editDemographics";
     }
 

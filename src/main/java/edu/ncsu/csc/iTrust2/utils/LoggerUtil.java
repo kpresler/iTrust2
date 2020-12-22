@@ -1,9 +1,15 @@
 package edu.ncsu.csc.iTrust2.utils;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+
+import edu.ncsu.csc.iTrust2.models.LogEntry;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
+import edu.ncsu.csc.iTrust2.services.LogEntryService;
 
 /**
  * Logging class to handle saving log-worthy events and for retrieving those
@@ -13,7 +19,11 @@ import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
  * @author Kai Presler-Marshall
  *
  */
+@Component
 public class LoggerUtil {
+
+    @Autowired
+    private LogEntryService service;
 
     /**
      * Most complete logger utility. Usually won't need all of this information,
@@ -29,11 +39,10 @@ public class LoggerUtil {
      * @param message
      *            An (optional) message for further details.
      */
-    static public void log ( final TransactionType code, final String primaryUser, final String secondaryUser,
+    public void log ( final TransactionType code, final String primaryUser, final String secondaryUser,
             final String message ) {
-        // final LogEntry le = new LogEntry( code, primaryUser, secondaryUser,
-        // message );
-        // le.save();
+        final LogEntry le = new LogEntry( code, primaryUser, secondaryUser, message );
+        service.save( le );
     }
 
     /**
@@ -46,7 +55,7 @@ public class LoggerUtil {
      * @param message
      *            A message for further details
      */
-    static public void log ( final TransactionType code, final String primaryUser, final String message ) {
+    public void log ( final TransactionType code, final String primaryUser, final String message ) {
         log( code, primaryUser, null, message );
     }
 
@@ -58,7 +67,7 @@ public class LoggerUtil {
      * @param primaryUser
      *            The primary user involved in the event that was logged.
      */
-    static public void log ( final TransactionType code, final String primaryUser ) {
+    public void log ( final TransactionType code, final String primaryUser ) {
         log( code, primaryUser, null, null );
     }
 
@@ -70,7 +79,7 @@ public class LoggerUtil {
      * @param primaryUser
      *            The Primary User involved
      */
-    static public void log ( final TransactionType code, final User primaryUser ) {
+    public void log ( final TransactionType code, final User primaryUser ) {
         log( code, primaryUser.getUsername() );
     }
 
@@ -81,9 +90,8 @@ public class LoggerUtil {
      *            User to find LogEntries for
      * @return A List of all LogEntry events for the user
      */
-    static public Object getAllForUser ( final String user ) {
-        // return LogEntry.getAllForUser( user );
-        return null;
+    public List<LogEntry> getAllForUser ( final String user ) {
+        return service.findAllForUser( user );
     }
 
     /**
@@ -93,9 +101,8 @@ public class LoggerUtil {
      *            The User to retrieve log entries for
      * @return The List of Log Entries that was found
      */
-    static public Object getAllForUser ( final User user ) {
-        // return getAllForUser( user.getUsername() );
-        return null;
+    public Object getAllForUser ( final User user ) {
+        return service.findAllForUser( user.getUsername() );
     }
 
     /**
@@ -108,21 +115,20 @@ public class LoggerUtil {
      * @return A List of the LogEntry Entries for the user. If the number of
      *         Entries is less than `top`, returns all
      */
-    static public Object getTopForUser ( final String user, final Integer top ) {
-        // final List<LogEntry> all = getAllForUser( user );
-        // all.sort( ( x1, x2 ) -> x1.getTime().compareTo( x2.getTime() ) );
-        // try {
-        // return all.subList( 0, top );
-        // }
-        // catch ( final IndexOutOfBoundsException e ) { /*
-        // * If num < top (ie, fewer
-        // * records exist than were
-        // * requested) return all
-        // */
-        // return all;
-        // }
+    public Object getTopForUser ( final String user, final Integer top ) {
+        final List<LogEntry> all = getAllForUser( user );
+        // TODO: This probably won't work with the String timestamp. Revisit.
+        all.sort( ( x1, x2 ) -> x1.getTime().compareTo( x2.getTime() ) );
+        try {
+            return all.subList( 0, top );
+        }
+        /*
+         * If num < top (ie, fewer records exist than were requested) return all
+         */
+        catch ( final IndexOutOfBoundsException e ) {
+            return all;
+        }
 
-        return null;
     }
 
     /**
@@ -135,7 +141,7 @@ public class LoggerUtil {
      * @param secondary
      *            The secondary user involved
      */
-    public static void log ( final TransactionType code, final User primary, final User secondary ) {
+    public void log ( final TransactionType code, final User primary, final User secondary ) {
         log( code, primary.getUsername(), secondary.getUsername(), null );
 
     }

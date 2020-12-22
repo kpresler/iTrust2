@@ -1,4 +1,4 @@
-package edu.ncsu.csc.iTrust2;
+package edu.ncsu.csc.iTrust2.config;
 
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
