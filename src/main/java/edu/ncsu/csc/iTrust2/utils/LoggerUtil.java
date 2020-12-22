@@ -117,7 +117,6 @@ public class LoggerUtil {
      */
     public Object getTopForUser ( final String user, final Integer top ) {
         final List<LogEntry> all = getAllForUser( user );
-        // TODO: This probably won't work with the String timestamp. Revisit.
         all.sort( ( x1, x2 ) -> x1.getTime().compareTo( x2.getTime() ) );
         try {
             return all.subList( 0, top );

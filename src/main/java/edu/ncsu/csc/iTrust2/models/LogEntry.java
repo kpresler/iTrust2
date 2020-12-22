@@ -1,15 +1,19 @@
 package edu.ncsu.csc.iTrust2.models;
 
-import java.util.Calendar;
+import java.time.ZonedDateTime;
 
+import javax.persistence.Basic;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.validator.constraints.Length;
+import com.google.gson.annotations.JsonAdapter;
 
+import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAdapter;
+import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAttributeConverter;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
 
 /**
@@ -40,9 +44,11 @@ public class LogEntry extends DomainObject {
      * The timestamp of when the event occurred
      */
     @NotNull
-    @Length ( max = 100 )
+    @Basic
     // Allows the field to show up nicely in the database
-    private String          time;         // TODO: We don't want to use a String
+    @Convert ( converter = ZonedDateTimeAttributeConverter.class )
+    @JsonAdapter ( ZonedDateTimeAdapter.class )
+    private ZonedDateTime   time;         // TODO: We don't want to use a String
 
     /**
      * The secondary user for the event that has been logged (optional)
@@ -80,7 +86,7 @@ public class LogEntry extends DomainObject {
         this.setPrimaryUser( primaryUser );
         this.setSecondaryUser( secondaryUser );
         this.setMessage( message );
-        this.setTime( String.valueOf( Calendar.getInstance().getTimeInMillis() ) );
+        this.setTime( ZonedDateTime.now() );
     }
 
     /**
@@ -111,7 +117,7 @@ public class LogEntry extends DomainObject {
      *
      * @return Time
      */
-    public String getTime () {
+    public ZonedDateTime getTime () {
         return this.time;
     }
 
@@ -199,7 +205,7 @@ public class LogEntry extends DomainObject {
      * @param time
      *            Timestamp when the event occurred.
      */
-    public void setTime ( final String time ) {
+    public void setTime ( final ZonedDateTime time ) {
         this.time = time;
     }
 
