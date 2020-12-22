@@ -1,4 +1,4 @@
-package edu.ncsu.csc.iTrust2.controllers;
+package edu.ncsu.csc.iTrust2.controllers.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

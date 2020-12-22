@@ -3,7 +3,7 @@ package edu.ncsu.csc.iTrust2.cucumber;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import edu.ncsu.csc.iTrust2.controllers.APICoffeeController;
+import edu.ncsu.csc.iTrust2.controllers.api.APICoffeeController;
 import edu.ncsu.csc.iTrust2.cucumber.utils.SharedCoffeeMakerData;
 import edu.ncsu.csc.iTrust2.models.Inventory;
 import edu.ncsu.csc.iTrust2.models.Recipe;

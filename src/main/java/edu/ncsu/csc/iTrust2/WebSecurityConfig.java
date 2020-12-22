@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure ( final HttpSecurity http ) throws Exception {
 
-        final String[] patterns = new String[] { "/login*", "/resources/img/DrJenkins.jpg" };
+        final String[] patterns = new String[] { "/login*", "/DrJenkins" };
         // Add filter for banned/locked IP
         /*
          * According to
