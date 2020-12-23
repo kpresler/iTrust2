@@ -27,7 +27,7 @@ import org.springframework.web.servlet.view.RedirectView;
 @Controller
 public class DefaultController {
 
-    @GetMapping ( { "/login", "/login.html" } )
+    @GetMapping ( { "login", "login.html" } )
     public String login ( final Model model ) {
         return "login";
     }

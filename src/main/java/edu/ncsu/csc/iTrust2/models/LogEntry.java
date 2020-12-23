@@ -48,7 +48,7 @@ public class LogEntry extends DomainObject {
     // Allows the field to show up nicely in the database
     @Convert ( converter = ZonedDateTimeAttributeConverter.class )
     @JsonAdapter ( ZonedDateTimeAdapter.class )
-    private ZonedDateTime   time;         // TODO: We don't want to use a String
+    private ZonedDateTime   time;
 
     /**
      * The secondary user for the event that has been logged (optional)

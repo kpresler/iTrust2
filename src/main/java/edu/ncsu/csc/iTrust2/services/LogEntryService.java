@@ -1,6 +1,8 @@
 package edu.ncsu.csc.iTrust2.services;
 
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import edu.ncsu.csc.iTrust2.models.LogEntry;
 import edu.ncsu.csc.iTrust2.repositories.LogEntryRepository;
+import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
 
 @Component
 @Transactional
@@ -26,28 +29,29 @@ public class LogEntryService extends Service {
     }
 
     public List<LogEntry> findAllForUser ( final String user ) {
-        LogEntry entry = new LogEntry();
+        final LogEntry entry = new LogEntry();
         entry.setPrimaryUser( user );
+        entry.setSecondaryUser( user );
 
-        ExampleMatcher matcher = ExampleMatcher.matching().withMatcher( "primaryUser",
-                ExampleMatcher.GenericPropertyMatchers.exact() );
+        // Maybe this will work?
+        final ExampleMatcher matcher = ExampleMatcher.matchingAny();
 
-        Example<LogEntry> example = Example.of( entry, matcher );
+        final Example<LogEntry> example = Example.of( entry, matcher );
 
         final List<LogEntry> byPrimaryUser = repository.findAll( example );
 
-        entry = new LogEntry();
-        entry.setSecondaryUser( user );
-
-        matcher = ExampleMatcher.matching().withMatcher( "secondaryUser",
-                ExampleMatcher.GenericPropertyMatchers.exact() );
-
-        example = Example.of( entry, matcher );
-
-        /* Add in all log entries where our target is the Secondary User too */
-        byPrimaryUser.addAll( repository.findAll( example ) );
-
         return byPrimaryUser;
+    }
+
+    public List<LogEntry> getByDateRange ( final ZonedDateTime startDate, final ZonedDateTime endDate ) {
+        endDate.plusDays( 1 ); // To make inclusive
+
+        final String user = LoggerUtil.currentUser();
+
+        return repository.findByTimeBetween( startDate, endDate ).stream()
+                .filter( e -> e.getPrimaryUser().equals( user ) || e.getSecondaryUser().equals( user ) )
+                .collect( Collectors.toList() );
+
     }
 
 }
