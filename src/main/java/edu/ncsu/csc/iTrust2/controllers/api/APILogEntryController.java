@@ -87,7 +87,7 @@ public class APILogEntryController extends APIController {
             if ( start.isAfter( end ) ) {
                 return new ResponseEntity( errorResponse( "Start Date is after End Date" ), HttpStatus.NOT_ACCEPTABLE );
             }
-            entries = leservice.getByDateRange( start, end );
+            entries = leservice.findByDateRange( LoggerUtil.currentUser(), start, end );
         }
         catch ( final ParseException ex ) {
             entries = leservice.findAllForUser( LoggerUtil.currentUser() );

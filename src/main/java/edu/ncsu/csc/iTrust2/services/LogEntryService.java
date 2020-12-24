@@ -7,14 +7,11 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import edu.ncsu.csc.iTrust2.models.LogEntry;
 import edu.ncsu.csc.iTrust2.repositories.LogEntryRepository;
-import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
 
 @Component
 @Transactional
@@ -29,26 +26,15 @@ public class LogEntryService extends Service {
     }
 
     public List<LogEntry> findAllForUser ( final String user ) {
-        final LogEntry entry = new LogEntry();
-        entry.setPrimaryUser( user );
-        entry.setSecondaryUser( user );
-
-        // Maybe this will work?
-        final ExampleMatcher matcher = ExampleMatcher.matchingAny();
-
-        final Example<LogEntry> example = Example.of( entry, matcher );
-
-        final List<LogEntry> byPrimaryUser = repository.findAll( example );
-
-        return byPrimaryUser;
+        return repository.findByPrimaryUserOrSecondaryUser( user );
     }
 
-    public List<LogEntry> getByDateRange ( final ZonedDateTime startDate, final ZonedDateTime endDate ) {
-        endDate.plusDays( 1 ); // To make inclusive
+    public List<LogEntry> findByDateRange ( final String user, final ZonedDateTime startDate,
+            final ZonedDateTime endDate ) {
 
-        final String user = LoggerUtil.currentUser();
+        final List<LogEntry> withinRange = repository.findByTimeBetween( startDate, endDate );
 
-        return repository.findByTimeBetween( startDate, endDate ).stream()
+        return withinRange.stream()
                 .filter( e -> e.getPrimaryUser().equals( user ) || e.getSecondaryUser().equals( user ) )
                 .collect( Collectors.toList() );
 
