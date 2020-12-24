@@ -1,4 +1,4 @@
-package edu.ncsu.csc.iTrust2.controllers.admin;
+package edu.ncsu.csc.iTrust2.controllers.routing;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

@@ -12,6 +12,10 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
+import edu.ncsu.csc.iTrust2.services.UserService;
+import edu.ncsu.csc.iTrust2.services.security.LoginAttemptService;
+import edu.ncsu.csc.iTrust2.services.security.LoginBanService;
+import edu.ncsu.csc.iTrust2.services.security.LoginLockoutService;
 import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
 
 /**
@@ -25,7 +29,19 @@ import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
 public class LoginAuditingListener implements ApplicationListener<ApplicationEvent> {
 
     @Autowired
-    private LoggerUtil util;
+    private LoggerUtil          util;
+
+    @Autowired
+    private LoginAttemptService loginAttemptService;
+
+    @Autowired
+    private LoginBanService     loginBanService;
+
+    @Autowired
+    private UserService         userService;
+
+    @Autowired
+    private LoginLockoutService loginLockoutService;
 
     @Override
     public void onApplicationEvent ( final ApplicationEvent event ) {
@@ -41,15 +57,12 @@ public class LoginAuditingListener implements ApplicationListener<ApplicationEve
             // If IP lockout or banned, this is still called, but the redirect
             // invalidates the credentials if they happen to be correct (and
             // bypassed the lockout page via a direct API call).
-            // final String addr = det.getRemoteAddress();
-            // if ( !LoginLockout.isIPLocked( addr ) && !LoginBan.isIPBanned(
-            // addr ) ) {
-            // LoginAttempt.clearIP( addr );
-            // LoginAttempt.clearUser( User.getByName( details.getUsername() )
-            // );
-            // LoggerUtil.log( TransactionType.LOGIN_SUCCESS,
-            // details.getUsername() );
-            // }
+            final String addr = det.getRemoteAddress();
+            if ( !loginLockoutService.isIPLocked( addr ) && !loginBanService.isIPBanned( addr ) ) {
+                loginAttemptService.deleteByIp( addr );
+                loginAttemptService.deleteByUser( userService.findByName( details.getUsername() ) );
+                util.log( TransactionType.LOGIN_SUCCESS, details.getUsername() );
+            }
 
         }
 

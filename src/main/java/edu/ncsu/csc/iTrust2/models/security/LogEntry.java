@@ -1,4 +1,4 @@
-package edu.ncsu.csc.iTrust2.models;
+package edu.ncsu.csc.iTrust2.models.security;
 
 import java.time.ZonedDateTime;
 
@@ -14,6 +14,7 @@ import com.google.gson.annotations.JsonAdapter;
 
 import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAdapter;
 import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAttributeConverter;
+import edu.ncsu.csc.iTrust2.models.DomainObject;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
 
 /**

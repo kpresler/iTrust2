@@ -16,8 +16,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.ncsu.csc.iTrust2.TestConfig;
-import edu.ncsu.csc.iTrust2.models.LogEntry;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
+import edu.ncsu.csc.iTrust2.models.security.LogEntry;
 import edu.ncsu.csc.iTrust2.services.LogEntryService;
 
 @RunWith ( SpringRunner.class )
