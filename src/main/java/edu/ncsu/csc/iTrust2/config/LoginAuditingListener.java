@@ -59,8 +59,8 @@ public class LoginAuditingListener implements ApplicationListener<ApplicationEve
             // bypassed the lockout page via a direct API call).
             final String addr = det.getRemoteAddress();
             if ( !loginLockoutService.isIPLocked( addr ) && !loginBanService.isIPBanned( addr ) ) {
-                loginAttemptService.deleteByIp( addr );
-                loginAttemptService.deleteByUser( userService.findByName( details.getUsername() ) );
+                loginAttemptService.clearIP( addr );
+                loginAttemptService.clearUser( userService.findByName( details.getUsername() ) );
                 util.log( TransactionType.LOGIN_SUCCESS, details.getUsername() );
             }
 

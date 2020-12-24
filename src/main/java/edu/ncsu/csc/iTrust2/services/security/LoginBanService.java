@@ -30,11 +30,11 @@ public class LoginBanService extends Service {
         return repository.existsByUser( user );
     }
 
-    public long deleteByIp ( final String ipAddress ) {
+    public long clearIP ( final String ipAddress ) {
         return repository.deleteByIp( ipAddress );
     }
 
-    public long deleteByUser ( final User user ) {
+    public long clearUser ( final User user ) {
         return repository.deleteByUser( user );
     }
 }

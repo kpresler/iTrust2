@@ -22,11 +22,11 @@ public class LoginAttemptService extends Service {
         return repository;
     }
 
-    public long countByIp ( final String ipAddress ) {
+    public long countByIP ( final String ipAddress ) {
         return repository.countByIp( ipAddress );
     }
 
-    public long deleteByIp ( final String ipAddress ) {
+    public long clearIP ( final String ipAddress ) {
         return repository.deleteByIp( ipAddress );
     }
 
@@ -34,7 +34,7 @@ public class LoginAttemptService extends Service {
         return repository.countByUser( user );
     }
 
-    public long deleteByUser ( final User user ) {
+    public long clearUser ( final User user ) {
         return repository.deleteByUser( user );
     }
 

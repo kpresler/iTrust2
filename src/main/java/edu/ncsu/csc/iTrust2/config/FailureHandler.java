@@ -65,8 +65,8 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
         if ( ae instanceof BadCredentialsException ) {
             // need to lockout IP
-            if ( loginAttemptService.countByIp( addr ) >= 5 ) {
-                loginAttemptService.deleteByIp( addr );
+            if ( loginAttemptService.countByIP( addr ) >= 5 ) {
+                loginAttemptService.clearIP( addr );
                 // Check if need to ban IP
                 if ( loginLockoutService.getRecentIPLockouts( addr ) >= 2 ) {
                     // BAN
@@ -129,7 +129,7 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
             if ( user != null ) {
                 // check if need to lockout username
                 if ( loginAttemptService.countByUser( user ) >= 2 ) {
-                    loginAttemptService.deleteByUser( user );
+                    loginAttemptService.clearUser( user );
                     // check if need to ban user
                     if ( loginLockoutService.getRecentUserLockouts( user ) >= 2 ) {
                         loginLockoutService.clearUser( user );
