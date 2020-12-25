@@ -27,14 +27,13 @@ public class LoginLockoutService extends Service {
 
     public boolean isIPLocked ( final String ipAddress ) {
         final long now = ZonedDateTime.now().toEpochSecond();
-
         return repository.findByIp( ipAddress ).stream()
                 .filter( e -> ( now - e.getTime().toEpochSecond() ) < 60 * 60 * 1000 ).collect( Collectors.toList() )
                 .size() > 0; // locked if within 60 minutes
     }
 
     public long clearIP ( final String ipAddress ) {
-        return repository.removeByIp( ipAddress );
+        return repository.deleteByIp( ipAddress );
 
     }
 
@@ -53,7 +52,7 @@ public class LoginLockoutService extends Service {
     }
 
     public long clearUser ( final User user ) {
-        return repository.removeByUser( user );
+        return repository.deleteByUser( user );
     }
 
     public boolean isUserLocked ( final User user ) {
