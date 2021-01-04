@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
+import edu.ncsu.csc.iTrust2.models.enums.Role;
+
 /**
  * Default controller that handles redirecting the logged-in user to one of the
  * appropriate landing screens based on their user roles. If a new role is added
@@ -44,7 +46,8 @@ public class DefaultController {
     public RedirectView index ( final Model model ) {
         final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         final List< ? extends GrantedAuthority> auths = (List< ? extends GrantedAuthority>) auth.getAuthorities();
-        final GrantedAuthority ga = auths.get( 0 );
-        return new RedirectView( edu.ncsu.csc.iTrust2.models.enums.Role.valueOf( ga.toString() ).getLanding() );
+        final Role role = auths.stream().map( e -> e.toString() ).map( Role::valueOf ).filter( e -> null != e )
+                .findAny().get();
+        return new RedirectView( role.getLanding() );
     }
 }

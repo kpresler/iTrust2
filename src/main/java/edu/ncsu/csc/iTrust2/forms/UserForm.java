@@ -1,5 +1,9 @@
 package edu.ncsu.csc.iTrust2.forms;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
@@ -15,6 +19,38 @@ import edu.ncsu.csc.iTrust2.models.enums.Role;
  *
  */
 public class UserForm {
+
+    /**
+     * Username of the user
+     */
+    @NotEmpty
+    @Length ( max = 20 )
+    private String      username;
+
+    /**
+     * Password of the user
+     */
+    @NotEmpty
+    @Length ( min = 6, max = 20 )
+    private String      password;
+
+    /***
+     * Confirmation password of the user
+     */
+    @NotEmpty
+    @Length ( min = 6, max = 20 )
+    private String      password2;
+
+    /**
+     * Role of the user
+     */
+    @NotEmpty
+    private Set<String> roles;
+
+    /**
+     * Whether the User is enabled or not
+     */
+    private String      enabled;
 
     /**
      * Empty constructor used to generate a blank form for the user to fill out.
@@ -39,7 +75,7 @@ public class UserForm {
         setUsername( username );
         setPassword( password );
         setPassword2( password );
-        setRole( role );
+        addRole( role );
         setEnabled( enabled );
     }
 
@@ -68,8 +104,7 @@ public class UserForm {
      */
     public UserForm ( final User u ) {
         setUsername( u.getUsername() );
-        setRole( u.getRole().toString() );
-
+        setRoles( u.getRoles().stream().map( e -> e.toString() ).collect( Collectors.toSet() ) );
         setEnabled( u.getEnabled().toString() );
     }
 
@@ -135,8 +170,8 @@ public class UserForm {
      *
      * @return The User's role
      */
-    public String getRole () {
-        return role;
+    public Set<String> getRoles () {
+        return roles;
     }
 
     /**
@@ -145,8 +180,15 @@ public class UserForm {
      * @param role
      *            Role of the user
      */
-    public void setRole ( final String role ) {
-        this.role = role;
+    public void setRoles ( final Set<String> roles ) {
+        this.roles = roles;
+    }
+
+    public void addRole ( final String role ) {
+        if ( null == this.roles ) {
+            this.roles = new HashSet<String>();
+        }
+        this.roles.add( role );
     }
 
     /**
@@ -167,37 +209,5 @@ public class UserForm {
     public void setEnabled ( final String enabled ) {
         this.enabled = enabled;
     }
-
-    /**
-     * Username of the user
-     */
-    @NotEmpty
-    @Length ( max = 20 )
-    private String username;
-
-    /**
-     * Password of the user
-     */
-    @NotEmpty
-    @Length ( min = 6, max = 20 )
-    private String password;
-
-    /***
-     * Confirmation password of the user
-     */
-    @NotEmpty
-    @Length ( min = 6, max = 20 )
-    private String password2;
-
-    /**
-     * Role of the user
-     */
-    @NotEmpty
-    private String role;
-
-    /**
-     * Whether the User is enabled or not
-     */
-    private String enabled;
 
 }

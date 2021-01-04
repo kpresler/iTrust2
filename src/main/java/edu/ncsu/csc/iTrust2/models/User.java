@@ -1,5 +1,11 @@
 package edu.ncsu.csc.iTrust2.models;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -52,7 +58,7 @@ public class User extends DomainObject {
     public User ( final String username, final String password, final Role role, final Integer enabled ) {
         setUsername( username );
         setPassword( password );
-        setRole( role );
+        addRole( role );
         setEnabled( enabled );
     }
 
@@ -70,7 +76,7 @@ public class User extends DomainObject {
         final PasswordEncoder pe = new BCryptPasswordEncoder();
         setPassword( pe.encode( form.getPassword() ) );
         setEnabled( null != form.getEnabled() ? 1 : 0 );
-        setRole( Role.valueOf( form.getRole() ) );
+        setRoles( form.getRoles().stream().map( Role::valueOf ).collect( Collectors.toSet() ) );
 
     }
 
@@ -79,25 +85,26 @@ public class User extends DomainObject {
      */
     @Id
     @Length ( max = 20 )
-    private String  username;
+    private String    username;
 
     /**
      * The password of the user
      */
-    private String  password;
+    private String    password;
 
     /**
      * Whether or not the user is enabled
      */
     @Min ( 0 )
     @Max ( 1 )
-    private Integer enabled;
+    private Integer   enabled;
 
     /**
      * The role of the user
      */
+    @ElementCollection ( targetClass = Role.class )
     @Enumerated ( EnumType.STRING )
-    private Role    role;
+    private Set<Role> roles;
 
     /**
      * Get the username of this user
@@ -161,8 +168,8 @@ public class User extends DomainObject {
      *
      * @return the role of this user
      */
-    public Role getRole () {
-        return role;
+    public Collection<Role> getRoles () {
+        return roles;
     }
 
     /**
@@ -171,8 +178,15 @@ public class User extends DomainObject {
      * @param role
      *            the role to set this user to
      */
-    public void setRole ( final Role role ) {
-        this.role = role;
+    public void setRoles ( final Set<Role> roles ) {
+        this.roles = roles;
+    }
+
+    public void addRole ( final Role role ) {
+        if ( null == this.roles ) {
+            this.roles = new HashSet<Role>();
+        }
+        this.roles.add( role );
     }
 
     /**
@@ -186,7 +200,7 @@ public class User extends DomainObject {
         int result = 1;
         result = prime * result + ( ( enabled == null ) ? 0 : enabled.hashCode() );
         result = prime * result + ( ( password == null ) ? 0 : password.hashCode() );
-        result = prime * result + ( ( role == null ) ? 0 : role.hashCode() );
+        result = prime * result + ( ( roles == null ) ? 0 : roles.hashCode() );
         result = prime * result + ( ( username == null ) ? 0 : username.hashCode() );
         return result;
     }
@@ -225,7 +239,7 @@ public class User extends DomainObject {
         else if ( !password.equals( other.password ) ) {
             return false;
         }
-        if ( role != other.role ) {
+        if ( roles != other.roles ) {
             return false;
         }
         if ( username == null ) {
@@ -247,13 +261,12 @@ public class User extends DomainObject {
     }
 
     /**
-     * True if the user is an HCP, OD, OPH, or Virologist
+     * Checks if a user is a Doctor.
      *
-     * @return true if the user role matches HCP, OD, Virologist, or OPH
+     * @return true if the user has the `ROLE_HCP` role
      */
     public boolean isDoctor () {
-        return ( role == Role.ROLE_HCP || role == Role.ROLE_OD || role == Role.ROLE_OPH
-                || role == Role.ROLE_VIROLOGIST );
+        return roles.contains( Role.ROLE_HCP );
     }
 
 }

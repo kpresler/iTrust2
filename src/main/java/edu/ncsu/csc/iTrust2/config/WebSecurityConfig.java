@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // http://websystique.com/springmvc/spring-mvc-4-and-spring-security-4-integration-example/
         dbManager.dataSource( dataSource ).passwordEncoder( passwordEncoder() )
                 .usersByUsernameQuery( "select username,password,enabled from user WHERE username = ?;" )
-                .authoritiesByUsernameQuery( "select username,role from user where username=?" );
+                .authoritiesByUsernameQuery( "select user_username, roles from user_roles where user_username=?" );
         auth.authenticationEventPublisher( defaultAuthenticationEventPublisher() );
 
     }

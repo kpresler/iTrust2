@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.ncsu.csc.iTrust2.models.enums.Role;
+
 /**
  * Controller to manage basic abilities for Admin roles
  *
@@ -25,6 +27,19 @@ public class AdminController {
     @RequestMapping ( value = "admin/index" )
     @PreAuthorize ( "hasRole('ROLE_ADMIN')" )
     public String index ( final Model model ) {
-        return edu.ncsu.csc.iTrust2.models.enums.Role.ROLE_ADMIN.getLanding();
+        return Role.ROLE_ADMIN.getLanding();
+    }
+
+    /**
+     * Add or delete user
+     *
+     * @param model
+     *            data for front end
+     * @return mapping
+     */
+    @RequestMapping ( value = "admin/users" )
+    @PreAuthorize ( "hasRole('ROLE_ADMIN')" )
+    public String manageUser ( final Model model ) {
+        return "/admin/users";
     }
 }

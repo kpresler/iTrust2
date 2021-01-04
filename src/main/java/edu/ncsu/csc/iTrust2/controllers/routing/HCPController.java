@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.ncsu.csc.iTrust2.models.enums.Role;
+
 /**
  * Controller class responsible for managing the behavior for the HCP Landing
  * Screen
@@ -26,7 +28,7 @@ public class HCPController {
     @RequestMapping ( value = "hcp/index" )
     @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_OD', 'ROLE_OPH', 'ROLE_VIROLOGIST')" )
     public String index ( final Model model ) {
-        return edu.ncsu.csc.iTrust2.models.enums.Role.ROLE_HCP.getLanding();
+        return Role.ROLE_HCP.getLanding();
     }
 
     /**

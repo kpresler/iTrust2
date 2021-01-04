@@ -32,6 +32,11 @@ public class DataGenerator {
 
         service.save( doc );
 
+        final User multiRoleDoc = new User( new UserForm( "er", "123456", Role.ROLE_HCP, 1 ) );
+        multiRoleDoc.addRole( Role.ROLE_ER );
+
+        service.save( multiRoleDoc );
+
     }
 
 }

@@ -1,6 +1,7 @@
 package edu.ncsu.csc.iTrust2.controllers.api;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,34 +37,37 @@ import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
 public class APIUserController extends APIController {
 
     /** constant for admin role */
-    private static final String ROLE_ADMIN      = "ROLE_ADMIN";
+    private static final String       ROLE_ADMIN      = "ROLE_ADMIN";
 
     /** constant for patient role */
-    private static final String ROLE_PATIENT    = "ROLE_PATIENT";
+    private static final String       ROLE_PATIENT    = "ROLE_PATIENT";
 
     /** constant for hcp role */
-    private static final String ROLE_HCP        = "ROLE_HCP";
+    private static final String       ROLE_HCP        = "ROLE_HCP";
 
     /** constant for ER role */
-    private static final String ROLE_ER         = "ROLE_ER";
+    private static final String       ROLE_ER         = "ROLE_ER";
 
     /** constant for lab role */
-    private static final String ROLE_LABTECH    = "ROLE_LABTECH";
+    private static final String       ROLE_LABTECH    = "ROLE_LABTECH";
 
     /** constant for virologist role */
-    private static final String ROLE_VIROLOGIST = "ROLE_VIROLOGIST";
+    private static final String       ROLE_VIROLOGIST = "ROLE_VIROLOGIST";
 
     /** constant for lab role */
-    private static final String ROLE_OD         = "ROLE_OD";
+    private static final String       ROLE_OD         = "ROLE_OD";
 
     /** constant for lab role */
-    private static final String ROLE_OPH        = "ROLE_OPH";
+    private static final String       ROLE_OPH        = "ROLE_OPH";
+
+    private static final List<String> allRoles        = List.of( ROLE_ADMIN, ROLE_PATIENT, ROLE_HCP, ROLE_ER,
+            ROLE_LABTECH, ROLE_VIROLOGIST, ROLE_OD, ROLE_OPH );
 
     @Autowired
-    private LoggerUtil          loggerUtil;
+    private LoggerUtil                loggerUtil;
 
     @Autowired
-    private UserService         userService;
+    private UserService               userService;
 
     /**
      * Retrieves and returns a list of all Users in the system, regardless of
@@ -195,34 +199,16 @@ public class APIUserController extends APIController {
      */
     @GetMapping ( BASE_PATH + "/role" )
     public ResponseEntity getRole () {
-        if ( hasRole( ROLE_HCP ) ) {
-            return new ResponseEntity( successResponse( ROLE_HCP ), HttpStatus.OK );
-        }
-        else if ( hasRole( ROLE_PATIENT ) ) {
-            return new ResponseEntity( successResponse( ROLE_PATIENT ), HttpStatus.OK );
-        }
-        else if ( hasRole( ROLE_ADMIN ) ) {
-            return new ResponseEntity( successResponse( ROLE_ADMIN ), HttpStatus.OK );
-        }
-        else if ( hasRole( ROLE_ER ) ) {
-            return new ResponseEntity( successResponse( ROLE_ER ), HttpStatus.OK );
+        final List<String> matchingRoles = allRoles.stream().filter( role -> hasRole( role ) )
+                .collect( Collectors.toList() );
 
-        }
-        else if ( hasRole( ROLE_LABTECH ) ) {
-            return new ResponseEntity( successResponse( ROLE_LABTECH ), HttpStatus.OK );
-        }
-        else if ( hasRole( ROLE_OD ) ) {
-            return new ResponseEntity( successResponse( ROLE_OD ), HttpStatus.OK );
-        }
-        else if ( hasRole( ROLE_OPH ) ) {
-            return new ResponseEntity( successResponse( ROLE_OPH ), HttpStatus.OK );
-        }
-        else if ( hasRole( ROLE_VIROLOGIST ) ) {
-            return new ResponseEntity( successResponse( ROLE_VIROLOGIST ), HttpStatus.OK );
-        }
-        else {
+        if ( matchingRoles.isEmpty() ) {
             return new ResponseEntity( errorResponse( "UNAUTHORIZED" ), HttpStatus.UNAUTHORIZED );
         }
+        final String joinedRoles = String.join( ",", matchingRoles );
+
+        return new ResponseEntity( successResponse( joinedRoles ), HttpStatus.OK );
+
     }
 
     /**

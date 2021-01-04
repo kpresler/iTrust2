@@ -6,6 +6,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import edu.ncsu.csc.iTrust2.models.enums.Role;
+
 /**
  * Controller for the Patient landing screen and basic patient information
  *
@@ -64,7 +66,7 @@ public class PatientController {
     @RequestMapping ( value = "patient/index" )
     @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
     public String index ( final Model model ) {
-        return edu.ncsu.csc.iTrust2.models.enums.Role.ROLE_PATIENT.getLanding();
+        return Role.ROLE_PATIENT.getLanding();
     }
 
     /**

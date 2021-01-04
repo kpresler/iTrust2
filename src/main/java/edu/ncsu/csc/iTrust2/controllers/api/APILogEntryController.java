@@ -102,7 +102,7 @@ public class APILogEntryController extends APIController {
         // Use only log entries that are viewable by the user
         List<LogEntry> visible;
         final User user = userService.findByName( LoggerUtil.currentUser() );
-        if ( user.getRole() == Role.ROLE_PATIENT ) {
+        if ( user.getRoles().contains( Role.ROLE_PATIENT ) ) {
             visible = new ArrayList<LogEntry>();
 
             for ( int i = 0; i < entries.size(); i++ ) {
@@ -146,18 +146,18 @@ public class APILogEntryController extends APIController {
             row.setTransactionType( le.getLogCode().getDescription() );
             row.setNumPages( numPages );
 
-            if ( user.getRole() == Role.ROLE_PATIENT ) {
+            if ( user.getRoles().contains( Role.ROLE_PATIENT ) ) {
                 row.setPatient( true );
 
                 if ( le.getPrimaryUser().equals( LoggerUtil.currentUser() ) ) {
                     final User secondary = userService.findByName( le.getSecondaryUser() );
                     if ( secondary != null ) {
-                        row.setRole( secondary.getRole().toString() );
+                        row.setRole( secondary.getRoles().toString() );
                     }
                 }
                 else {
                     final User primary = userService.findByName( le.getPrimaryUser() );
-                    row.setRole( primary.getRole().toString() );
+                    row.setRole( primary.getRoles().toString() );
                 }
             }
 
