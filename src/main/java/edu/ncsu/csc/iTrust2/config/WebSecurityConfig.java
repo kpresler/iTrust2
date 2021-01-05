@@ -76,35 +76,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers( patterns ).anonymous().anyRequest().authenticated().and().formLogin()
                 .loginPage( "/login" ).failureHandler( failureHandler() ).defaultSuccessUrl( "/" ).and().csrf()
 
-                .csrfTokenRepository( CookieCsrfTokenRepository
-                        .withHttpOnlyFalse() ); /*
-                                                 * Credit to
-                                                 * https://medium.com/spektrakel
-                                                 * -blog/angular2-and-spring-a-
-                                                 * friend-in-
-                                                 * security-need-is-a-friend-
-                                                 * against-csrf-indeed-
-                                                 * 9f83eaa9ca2e and
-                                                 * http://docs.spring.io/spring-
-                                                 * security/site/docs/current/
-                                                 * reference/
-                                                 * html/csrf.html#csrf-cookie
-                                                 * for information on how to
-                                                 * make Angular work properly
-                                                 * with CSRF protection
-                                                 */
+                /*
+                 * * Credit to https://medium.com/spektrakel
+                 * -blog/angular2-and-spring-a- friend-in-
+                 * security-need-is-a-friend- against-csrf-indeed- 9f83eaa9ca2e
+                 * and http://docs.spring.io/spring- security/site/docs/current/
+                 * reference/ html/csrf.html#csrf-cookie for information on how
+                 * to make Angular work properly with CSRF protection
+                 */
+
+                .csrfTokenRepository( CookieCsrfTokenRepository.withHttpOnlyFalse() );
 
     }
-
-    // @Bean
-    // @Override
-    // public UserDetailsService userDetailsService () {
-    // final UserDetails user = User.withDefaultPasswordEncoder().username(
-    // "user" ).password( "password" )
-    // .roles( "USER" ).build();
-    //
-    // return new InMemoryUserDetailsManager( user );
-    // }
 
     /**
      * Bean used to generate a PasswordEncoder to hash the user-provided

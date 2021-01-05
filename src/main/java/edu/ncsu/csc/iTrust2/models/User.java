@@ -76,6 +76,7 @@ public class User extends DomainObject {
         final PasswordEncoder pe = new BCryptPasswordEncoder();
         setPassword( pe.encode( form.getPassword() ) );
         setEnabled( null != form.getEnabled() ? 1 : 0 );
+        /* Patient & admin can't have any other roles */
         setRoles( form.getRoles().stream().map( Role::valueOf ).collect( Collectors.toSet() ) );
 
     }
@@ -179,12 +180,23 @@ public class User extends DomainObject {
      *            the role to set this user to
      */
     public void setRoles ( final Set<Role> roles ) {
+        if ( ( roles.contains( Role.ROLE_PATIENT ) || roles.contains( Role.ROLE_ADMIN ) ) && 1 != roles.size() ) {
+            throw new IllegalArgumentException(
+                    "Tried to create a Patient or Admin user with a secondary role.  Patient & admin can only have a single role!" );
+        }
+
         this.roles = roles;
     }
 
     public void addRole ( final Role role ) {
         if ( null == this.roles ) {
             this.roles = new HashSet<Role>();
+        }
+        if ( role.equals( Role.ROLE_ADMIN ) || role.equals( Role.ROLE_PATIENT ) ) {
+            throw new IllegalArgumentException( "Admin and Patient roles cannot be added" );
+        }
+        if ( this.roles.contains( Role.ROLE_ADMIN ) || this.roles.contains( Role.ROLE_PATIENT ) ) {
+            throw new IllegalArgumentException( "Admins and Patients cannot have additional roles added" );
         }
         this.roles.add( role );
     }

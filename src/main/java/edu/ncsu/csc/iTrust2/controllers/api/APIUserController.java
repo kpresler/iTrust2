@@ -181,14 +181,8 @@ public class APIUserController extends APIController {
             return new ResponseEntity( id, HttpStatus.OK );
         }
         catch ( final Exception e ) {
-            try {
-                userService.delete( user ); // TODO: Is this necessary?
-                return new ResponseEntity( id, HttpStatus.OK );
-            }
-            catch ( final Exception f ) {
-                return new ResponseEntity( errorResponse( "Could not delete " + id + " because of " + f.getMessage() ),
-                        HttpStatus.BAD_REQUEST );
-            }
+            return new ResponseEntity( errorResponse( "Could not delete " + id + " because of " + e.getMessage() ),
+                    HttpStatus.BAD_REQUEST );
         }
     }
 
