@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
 import edu.ncsu.csc.iTrust2.models.security.LogEntry;
-import edu.ncsu.csc.iTrust2.services.LogEntryService;
+import edu.ncsu.csc.iTrust2.services.security.LogEntryService;
 
 /**
  * Logging class to handle saving log-worthy events and for retrieving those

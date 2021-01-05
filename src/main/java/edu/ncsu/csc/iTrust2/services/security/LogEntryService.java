@@ -1,4 +1,4 @@
-package edu.ncsu.csc.iTrust2.services;
+package edu.ncsu.csc.iTrust2.services.security;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import edu.ncsu.csc.iTrust2.models.security.LogEntry;
 import edu.ncsu.csc.iTrust2.repositories.security.LogEntryRepository;
+import edu.ncsu.csc.iTrust2.services.Service;
 
 @Component
 @Transactional

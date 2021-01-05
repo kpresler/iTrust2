@@ -22,8 +22,8 @@ import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.Role;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
 import edu.ncsu.csc.iTrust2.models.security.LogEntry;
-import edu.ncsu.csc.iTrust2.services.LogEntryService;
 import edu.ncsu.csc.iTrust2.services.UserService;
+import edu.ncsu.csc.iTrust2.services.security.LogEntryService;
 import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
 
 /**

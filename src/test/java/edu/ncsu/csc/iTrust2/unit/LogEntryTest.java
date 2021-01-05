@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.ncsu.csc.iTrust2.TestConfig;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
 import edu.ncsu.csc.iTrust2.models.security.LogEntry;
-import edu.ncsu.csc.iTrust2.services.LogEntryService;
+import edu.ncsu.csc.iTrust2.services.security.LogEntryService;
 
 @RunWith ( SpringRunner.class )
 @EnableAutoConfiguration
