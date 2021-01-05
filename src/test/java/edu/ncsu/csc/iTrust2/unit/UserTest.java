@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import edu.ncsu.csc.iTrust2.TestConfig;
 import edu.ncsu.csc.iTrust2.forms.UserForm;
+import edu.ncsu.csc.iTrust2.models.Patient;
+import edu.ncsu.csc.iTrust2.models.Personnel;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.Role;
 import edu.ncsu.csc.iTrust2.services.UserService;
@@ -45,7 +47,7 @@ public class UserTest {
 
         Assert.assertEquals( "There should be no users in the system", 0, service.count() );
 
-        final User user1 = new User( new UserForm( USER_1, PW, Role.ROLE_HCP, 1 ) );
+        final User user1 = new Personnel( new UserForm( USER_1, PW, Role.ROLE_HCP, 1 ) );
 
         service.save( user1 );
 
@@ -61,9 +63,9 @@ public class UserTest {
         Assert.assertEquals( "A user with two roles should be retrieved with two roles", 2,
                 service.findByName( USER_1 ).getRoles().size() );
 
-        final User user2 = new User( new UserForm( USER_2, PW, Role.ROLE_PATIENT, 1 ) );
+        final User user2 = new Patient( new UserForm( USER_2, PW, Role.ROLE_PATIENT, 1 ) );
 
-        User user3 = new User( new UserForm( USER_3, PW, Role.ROLE_LABTECH, 1 ) );
+        User user3 = new Personnel( new UserForm( USER_3, PW, Role.ROLE_LABTECH, 1 ) );
         service.saveAll( List.of( user2, user3 ) );
 
         Assert.assertEquals( "Creating multiple users should save them as expected", 3, service.count() );
@@ -85,7 +87,7 @@ public class UserTest {
             final UserForm uf = new UserForm( USER_2, PW, Role.ROLE_ADMIN, 1 );
             uf.addRole( Role.ROLE_LABTECH.toString() );
 
-            final User user2 = new User( uf );
+            final User user2 = new Personnel( uf );
 
             Assert.fail( "It should not be possible to create an Admin with a secondary role!" );
         }
@@ -95,7 +97,7 @@ public class UserTest {
 
         try {
             final UserForm uf = new UserForm( USER_2, PW, Role.ROLE_ADMIN, 1 );
-            final User user2 = new User( uf );
+            final User user2 = new Personnel( uf );
 
             user2.addRole( Role.ROLE_ER );
 
@@ -107,7 +109,7 @@ public class UserTest {
 
         try {
             final UserForm uf = new UserForm( USER_2, PW, Role.ROLE_ER, 1 );
-            final User user2 = new User( uf );
+            final User user2 = new Personnel( uf );
 
             user2.addRole( Role.ROLE_ADMIN );
 

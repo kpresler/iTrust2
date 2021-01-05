@@ -9,6 +9,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import edu.ncsu.csc.iTrust2.TestConfig;
 import edu.ncsu.csc.iTrust2.forms.UserForm;
+import edu.ncsu.csc.iTrust2.models.Patient;
+import edu.ncsu.csc.iTrust2.models.Personnel;
 import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.Role;
 import edu.ncsu.csc.iTrust2.services.UserService;
@@ -24,18 +26,22 @@ public class DataGenerator {
     @Test
     public void createUsers () {
 
-        final User admin = new User( new UserForm( "admin", "123456", Role.ROLE_ADMIN, 1 ) );
+        final User admin = new Personnel( new UserForm( "admin", "123456", Role.ROLE_ADMIN, 1 ) );
 
-        final User doc = new User( new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 ) );
+        final User doc = new Personnel( new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 ) );
 
         service.save( admin );
 
         service.save( doc );
 
-        final User multiRoleDoc = new User( new UserForm( "er", "123456", Role.ROLE_HCP, 1 ) );
+        final User multiRoleDoc = new Personnel( new UserForm( "er", "123456", Role.ROLE_HCP, 1 ) );
         multiRoleDoc.addRole( Role.ROLE_ER );
 
         service.save( multiRoleDoc );
+
+        final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
+
+        service.save( patient );
 
     }
 

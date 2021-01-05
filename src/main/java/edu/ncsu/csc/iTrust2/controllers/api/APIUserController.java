@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.ncsu.csc.iTrust2.forms.UserForm;
+import edu.ncsu.csc.iTrust2.models.Patient;
+import edu.ncsu.csc.iTrust2.models.Personnel;
 import edu.ncsu.csc.iTrust2.models.User;
+import edu.ncsu.csc.iTrust2.models.enums.Role;
 import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
 import edu.ncsu.csc.iTrust2.services.UserService;
 import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
@@ -107,11 +110,23 @@ public class APIUserController extends APIController {
      */
     @PostMapping ( BASE_PATH + "/users" )
     public ResponseEntity createUser ( @RequestBody final UserForm userF ) {
-        final User user = new User( userF );
-        if ( null != userService.findByName( user.getUsername() ) ) {
-            return new ResponseEntity( errorResponse( "User with the id " + user.getUsername() + " already exists" ),
+        if ( null != userService.findByName( userF.getUsername() ) ) {
+            return new ResponseEntity( errorResponse( "User with the id " + userF.getUsername() + " already exists" ),
                     HttpStatus.CONFLICT );
         }
+
+        User user = null;
+
+        final List<Role> rolesOnUser = userF.getRoles().stream().map( Role::valueOf ).collect( Collectors.toList() );
+
+        if ( rolesOnUser.contains( Role.ROLE_PATIENT ) ) {
+            user = new Patient( userF );
+        }
+
+        else {
+            user = new Personnel( userF );
+        }
+
         try {
             userService.save( user );
             loggerUtil.log( TransactionType.CREATE_USER, LoggerUtil.currentUser(), user.getUsername(), null );
@@ -138,7 +153,17 @@ public class APIUserController extends APIController {
      */
     @PutMapping ( BASE_PATH + "/users/{id}" )
     public ResponseEntity updateUser ( @PathVariable final String id, @RequestBody final UserForm userF ) {
-        final User user = new User( userF );
+        User user = null;
+        final List<Role> rolesOnUser = userF.getRoles().stream().map( Role::valueOf ).collect( Collectors.toList() );
+
+        if ( rolesOnUser.contains( Role.ROLE_PATIENT ) ) {
+            user = new Patient( userF );
+        }
+
+        else {
+            user = new Personnel( userF );
+        }
+
         if ( null != user.getId() && !id.equals( user.getId() ) ) {
             return new ResponseEntity( errorResponse( "The ID provided does not match the ID of the User provided" ),
                     HttpStatus.CONFLICT );

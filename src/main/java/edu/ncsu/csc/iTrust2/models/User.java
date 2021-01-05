@@ -9,6 +9,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -40,7 +41,7 @@ public class User extends DomainObject {
     private static final long serialVersionUID = 1L;
 
     /** For Hibernate */
-    public User () {
+    protected User () {
     }
 
     /**
@@ -55,7 +56,7 @@ public class User extends DomainObject {
      * @param enabled
      *            1 if the user is enabled 0 if not
      */
-    public User ( final String username, final String password, final Role role, final Integer enabled ) {
+    protected User ( final String username, final String password, final Role role, final Integer enabled ) {
         setUsername( username );
         setPassword( password );
         addRole( role );
@@ -68,7 +69,7 @@ public class User extends DomainObject {
      * @param form
      *            the filled-in user form with user information
      */
-    public User ( final UserForm form ) {
+    protected User ( final UserForm form ) {
         setUsername( form.getUsername() );
         if ( !form.getPassword().equals( form.getPassword2() ) ) {
             throw new IllegalArgumentException( "Passwords do not match!" );
@@ -76,7 +77,6 @@ public class User extends DomainObject {
         final PasswordEncoder pe = new BCryptPasswordEncoder();
         setPassword( pe.encode( form.getPassword() ) );
         setEnabled( null != form.getEnabled() ? 1 : 0 );
-        /* Patient & admin can't have any other roles */
         setRoles( form.getRoles().stream().map( Role::valueOf ).collect( Collectors.toSet() ) );
 
     }
@@ -103,7 +103,7 @@ public class User extends DomainObject {
     /**
      * The role of the user
      */
-    @ElementCollection ( targetClass = Role.class )
+    @ElementCollection ( targetClass = Role.class, fetch = FetchType.EAGER )
     @Enumerated ( EnumType.STRING )
     private Set<Role> roles;
 
@@ -180,6 +180,7 @@ public class User extends DomainObject {
      *            the role to set this user to
      */
     public void setRoles ( final Set<Role> roles ) {
+        /* Patient & admin can't have any other roles */
         if ( ( roles.contains( Role.ROLE_PATIENT ) || roles.contains( Role.ROLE_ADMIN ) ) && 1 != roles.size() ) {
             throw new IllegalArgumentException(
                     "Tried to create a Patient or Admin user with a secondary role.  Patient & admin can only have a single role!" );
