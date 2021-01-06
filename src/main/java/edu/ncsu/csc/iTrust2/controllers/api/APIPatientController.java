@@ -85,6 +85,7 @@ public class APIPatientController extends APIController {
      * @return response
      */
     @GetMapping ( BASE_PATH + "/patients/{username}" )
+    @PreAuthorize ( "hasRole('ROLE_HCP')" )
     public ResponseEntity getPatient ( @PathVariable ( "username" ) final String username ) {
         final Patient patient = (Patient) patientService.findByName( username );
         if ( patient == null ) {
@@ -131,6 +132,11 @@ public class APIPatientController extends APIController {
 
         try {
             final Patient patient = (Patient) patientService.findByName( id );
+
+            // Shouldn't be possible but let's check anyways
+            if ( null == patient ) {
+                return new ResponseEntity( errorResponse( "Patient not found" ), HttpStatus.NOT_FOUND );
+            }
 
             patient.update( patientF );
 

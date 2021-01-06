@@ -137,9 +137,6 @@ public class PatientForm {
     @NotEmpty
     private String  gender;
 
-    /** The id of the patient **/
-    private Long    id;
-
     /**
      * Whether the patient is diabetic/pre-diabetic or not
      */
@@ -462,25 +459,6 @@ public class PatientForm {
      */
     public void setGender ( final String gender ) {
         this.gender = gender;
-    }
-
-    /**
-     * Get the id of the patient
-     *
-     * @return the id of the patient
-     */
-    public Long getId () {
-        return id;
-    }
-
-    /**
-     * Set the id of the patient
-     *
-     * @param id
-     *            the id of the patient
-     */
-    public void setId ( final Long id ) {
-        this.id = id;
     }
 
     /**

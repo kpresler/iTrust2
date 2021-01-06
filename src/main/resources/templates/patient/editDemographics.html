@@ -82,18 +82,6 @@
 		    } else {
 			    $scope.err[2] = "";
 		    }
-		    if(form.mother && $scope.nameOfPatients.includes(form.mother)) {
-			    $scope.err[3] = ("no user with this username");
-			    valid = false;
-		    } else {
-			    $scope.err[3] = "";
-		    }
-		    if(form.father && $scope.nameOfPatients.includes(form.father)) {
-			    $scope.err[4] = ("no user with this username");
-			    valid = false;
-		    } else {
-			    $scope.err[4] = "";
-		    }
 		    if(!form.email || form.email.length > 30) {
 			    $scope.err[5] = ("email can not be empty or longer than 30 characters");
 			    valid = false;
@@ -196,20 +184,6 @@
 						<td><input type="text" name="preferredName"
 							id="preferredName" ng-model="patientForm.preferredName" /></td>
 						<td style="color: red;" ng-show="err[2]">{{err[2]}}</td>
-					</tr>
-					<tr>
-						<td style="text-align: left; padding: 5px"><b>Mother
-								(username):</b></td>
-						<td><input type="text" name="mother" id="mother"
-							ng-model="patientForm.mother" /></td>
-						<td style="color: red;" ng-show="err[3]">{{err[3]}}</td>
-					</tr>
-					<tr>
-						<td style="text-align: left; padding: 5px"><b>Father
-								(username):</b></td>
-						<td><input type="text" name="father" id="father"
-							ng-model="patientForm.father" /></td>
-						<td style="color: red;" ng-show="err[4]">{{err[4]}}</td>
 					</tr>
 					<tr>
 						<td style="text-align: left; padding: 5px"><b>Email:</b></td>
