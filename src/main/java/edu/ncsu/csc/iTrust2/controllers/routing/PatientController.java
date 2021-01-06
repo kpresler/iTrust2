@@ -76,21 +76,10 @@ public class PatientController {
      *            The data for the front end
      * @return The page to show the user so they can edit demographics
      */
-    @GetMapping ( value = "patient/demographics/editDemographics" )
+    @GetMapping ( value = "patient/editDemographics" )
     @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
     public String viewDemographics ( final Model model ) {
-        return "/patient/demographics/editDemographics";
-    }
-
-    /**
-     * Returns the page for a patient to view Personal Representatives
-     *
-     * @return Page to display to the user
-     */
-    @GetMapping ( value = "/patient/personalRepresentative/personalRepresentatives" )
-    @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
-    public String viewPersonalReps () {
-        return "/patient/personalRepresentative/personalRepresentatives";
+        return "/patient/editDemographics";
     }
 
     /**
