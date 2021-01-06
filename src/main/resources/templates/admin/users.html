@@ -214,7 +214,7 @@ input[type=password] {
 													<br> <br> <b>Role:</b>
 
 													<div ng-repeat="role in roles track by $index">
-														<input type="checkbox" ng-model="$parent.user.roles[role]"><i>
+														<input type="checkbox" id="{{role}}" ng-model="$parent.user.roles[role]"><i>
 															{{role}}</i></input>
 													</div>
 
@@ -224,7 +224,7 @@ input[type=password] {
 													<br> <input type="submit" id="submit" value="Add User" />
 												</form>
 												<div>
-													<p style="color: red" ng-model="errorAdding" id="errP">{{errorAdding}}</p>
+													<p style="color: red" ng-model="errorAdding" id="error">{{errorAdding}}</p>
 												</div>
 												<div>
 													<p style="color: green" ng-model="successMessage"
