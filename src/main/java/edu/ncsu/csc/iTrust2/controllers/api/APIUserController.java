@@ -114,27 +114,25 @@ public class APIUserController extends APIController {
             return new ResponseEntity( errorResponse( "User with the id " + userF.getUsername() + " already exists" ),
                     HttpStatus.CONFLICT );
         }
-
         User user = null;
-
         final List<Role> rolesOnUser = userF.getRoles().stream().map( Role::valueOf ).collect( Collectors.toList() );
 
-        if ( rolesOnUser.contains( Role.ROLE_PATIENT ) ) {
-            user = new Patient( userF );
-        }
-
-        else {
-            user = new Personnel( userF );
-        }
-
         try {
+            if ( rolesOnUser.contains( Role.ROLE_PATIENT ) ) {
+                user = new Patient( userF );
+            }
+
+            else {
+                user = new Personnel( userF );
+            }
+
             userService.save( user );
             loggerUtil.log( TransactionType.CREATE_USER, LoggerUtil.currentUser(), user.getUsername(), null );
             return new ResponseEntity( user, HttpStatus.OK );
         }
         catch ( final Exception e ) {
             return new ResponseEntity(
-                    errorResponse( "Could not create " + user.toString() + " because of " + e.getMessage() ),
+                    errorResponse( "Could not create " + userF.getUsername() + " because of " + e.getMessage() ),
                     HttpStatus.BAD_REQUEST );
         }
 
@@ -156,31 +154,31 @@ public class APIUserController extends APIController {
         User user = null;
         final List<Role> rolesOnUser = userF.getRoles().stream().map( Role::valueOf ).collect( Collectors.toList() );
 
-        if ( rolesOnUser.contains( Role.ROLE_PATIENT ) ) {
-            user = new Patient( userF );
-        }
-
-        else {
-            user = new Personnel( userF );
-        }
-
-        if ( null != user.getId() && !id.equals( user.getId() ) ) {
-            return new ResponseEntity( errorResponse( "The ID provided does not match the ID of the User provided" ),
-                    HttpStatus.CONFLICT );
-        }
-        final User dbUser = userService.findByName( id );
-        if ( null == dbUser ) {
-            return new ResponseEntity( errorResponse( "No user found for id " + id ), HttpStatus.NOT_FOUND );
-        }
         try {
+            if ( rolesOnUser.contains( Role.ROLE_PATIENT ) ) {
+                user = new Patient( userF );
+            }
+            else {
+                user = new Personnel( userF );
+            }
+
+            if ( null != user.getId() && !id.equals( user.getId() ) ) {
+                return new ResponseEntity(
+                        errorResponse( "The ID provided does not match the ID of the User provided" ),
+                        HttpStatus.CONFLICT );
+            }
+            final User dbUser = userService.findByName( id );
+            if ( null == dbUser ) {
+                return new ResponseEntity( errorResponse( "No user found for id " + id ), HttpStatus.NOT_FOUND );
+            }
+
             userService.save( user ); /* Will overwrite existing user */
             loggerUtil.log( TransactionType.UPDATE_USER, LoggerUtil.currentUser() );
             return new ResponseEntity( user, HttpStatus.OK );
         }
 
         catch ( final Exception e ) {
-            return new ResponseEntity(
-                    errorResponse( "Could not update " + user.toString() + " because of " + e.getMessage() ),
+            return new ResponseEntity( errorResponse( "Could not update " + id + " because of " + e.getMessage() ),
                     HttpStatus.BAD_REQUEST );
         }
     }
