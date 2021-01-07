@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import edu.ncsu.csc.iTrust2.models.enums.TransactionType;
 import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
 
 /**
@@ -37,9 +36,8 @@ public class UserController {
      * @return response
      */
     @GetMapping ( value = "personnel/editDemographics" )
-    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_OD', 'ROLE_OPH', 'ROLE_ADMIN', 'ROLE_ER', 'ROLE_LABTECH', 'ROLE_VIROLOGIST')" )
+    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_ADMIN')" )
     public String viewDemographics ( final Model model ) {
-        util.log( TransactionType.VIEW_DEMOGRAPHICS, LoggerUtil.currentUser() );
         return "/personnel/editDemographics";
     }
 
