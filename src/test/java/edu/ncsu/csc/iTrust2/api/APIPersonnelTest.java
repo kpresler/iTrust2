@@ -70,6 +70,7 @@ public class APIPersonnelTest {
      */
     @Test
     @Transactional
+    @WithMockUser ( username = "hcp", roles = { "HCP" } )
     public void testGetNonExistentPersonnel () throws Exception {
         mvc.perform( get( "/api/v1/personnel/-1" ) ).andExpect( status().isNotFound() );
     }
@@ -134,6 +135,7 @@ public class APIPersonnelTest {
      */
     @Test
     @Transactional
+    @WithMockUser ( username = "hcp", roles = { "ADMIN" } )
     public void testGetByRole () throws Exception {
         // Valid get requests
         mvc.perform( get( "/api/v1/personnel/getbyroles/ROLE_LABTECH" ) ).andExpect( status().isOk() );

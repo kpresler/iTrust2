@@ -68,6 +68,8 @@ public class APIPatientTest {
      * @throws Exception
      */
     @Test
+    @Transactional
+    @WithMockUser ( username = "hcp", roles = { "HCP" } )
     public void testGetNonExistentPatient () throws Exception {
         mvc.perform( get( "/api/v1/patients/-1" ) ).andExpect( status().isNotFound() );
     }
