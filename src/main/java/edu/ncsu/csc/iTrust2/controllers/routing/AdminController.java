@@ -42,4 +42,17 @@ public class AdminController {
     public String manageUser ( final Model model ) {
         return "/admin/users";
     }
+
+    /**
+     * Creates the form page for the Add Hospital page
+     *
+     * @param model
+     *            Data for the front end
+     * @return Page to show to the user
+     */
+    @RequestMapping ( value = "admin/hospitals" )
+    @PreAuthorize ( "hasRole('ROLE_ADMIN')" )
+    public String manageHospital ( final Model model ) {
+        return "/admin/hospitals";
+    }
 }
