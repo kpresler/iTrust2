@@ -1,6 +1,7 @@
 package edu.ncsu.csc.iTrust2.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,7 +33,7 @@ abstract public class Service {
      *
      * @return The Repository instance from your subclass.
      */
-    abstract protected JpaRepository<DomainObject, ? extends Object> getRepository ();
+    abstract protected JpaRepository<DomainObject, Object> getRepository ();
 
     /**
      * Saves the provided object into the database. If the object already
@@ -114,6 +115,17 @@ abstract public class Service {
     protected List< ? extends DomainObject> findBy ( final Example<DomainObject> example ) {
         return getRepository().findAll( example );
 
+    }
+
+    public DomainObject findById ( final Object id ) {
+        if ( null == id ) {
+            return null;
+        }
+        final Optional<DomainObject> res = getRepository().findById( id );
+        if ( res.isPresent() ) {
+            return res.get();
+        }
+        return null;
     }
 
 }

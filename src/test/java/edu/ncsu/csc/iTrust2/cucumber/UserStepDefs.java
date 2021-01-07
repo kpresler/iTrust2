@@ -163,6 +163,7 @@ public class UserStepDefs extends CucumberTest {
         password.sendKeys( "123456" );
         final WebElement submit = driver.findElement( By.className( "btn" ) );
         submit.click();
+        waitForAngular();
 
         /**
          * Not an assert statement in the typical sense, but we know that we can
