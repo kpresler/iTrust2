@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.JdbcUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -89,6 +90,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .csrfTokenRepository( CookieCsrfTokenRepository.withHttpOnlyFalse() );
 
+    }
+
+    @Override
+    public void configure ( final WebSecurity web ) throws Exception {
+        // Allow anonymous access to the 3 mappings related to resetting a
+        // forgotten password
+        web.ignoring().antMatchers( "/api/v1/requestPasswordReset", "/api/v1/resetPassword/*", "/requestPasswordReset",
+                "/resetPassword", "/api/v1/generateUsers" );
     }
 
     /**

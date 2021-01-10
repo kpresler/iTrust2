@@ -228,6 +228,30 @@ public class APIUserController extends APIController {
 
     }
 
+    @PostMapping ( BASE_PATH + "generateUsers" )
+    public ResponseEntity generateUsers () {
+        final User admin = new Personnel( new UserForm( "admin", "123456", Role.ROLE_ADMIN, 1 ) );
+
+        final User doc = new Personnel( new UserForm( "hcp", "123456", Role.ROLE_HCP, 1 ) );
+
+        userService.save( admin );
+
+        userService.save( doc );
+
+        final User multiRoleDoc = new Personnel( new UserForm( "er", "123456", Role.ROLE_HCP, 1 ) );
+        multiRoleDoc.addRole( Role.ROLE_ER );
+
+        userService.save( multiRoleDoc );
+
+        final User patient = new Patient( new UserForm( "patient", "123456", Role.ROLE_PATIENT, 1 ) );
+
+        userService.save( patient );
+
+        loggerUtil.log( TransactionType.USERS_GENERATED, "" );
+
+        return new ResponseEntity( HttpStatus.OK );
+    }
+
     /**
      * Checks if the current user has a `role`.
      *

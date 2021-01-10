@@ -65,6 +65,11 @@ public enum TransactionType {
     UPDATE_USER ( 104, "User updated", false ),
 
     /**
+     * Sample users for login generated
+     */
+    USERS_GENERATED ( 105, "Sample users generated", false ),
+
+    /**
      * User viewed their demographics
      */
     VIEW_DEMOGRAPHICS ( 400, "Demographics viewed by user", true ),
