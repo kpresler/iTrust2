@@ -11,13 +11,22 @@ import org.junit.Assert;
 
 public class DBUtils {
 
-    static final private String DB_NAME = "iTrust2_test";
-
     static public void resetDB ( final DataSource dataSource ) {
+
         try ( Connection conn = dataSource.getConnection(); ) {
 
             final DatabaseMetaData metaData = conn.getMetaData();
-            final ResultSet tables = metaData.getTables( DB_NAME, null, null, new String[] { "TABLE" } );
+            String dbName = metaData.getURL();
+
+            /*
+             * DB URL looks something like
+             * `jdbc:mysql://localhost:3306/iTrust2_test?
+             * createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true`, so
+             * it has to be pulled apart to get the actual name out
+             */
+            dbName = dbName.split( "/" )[3].split( "\\?" )[0];
+
+            final ResultSet tables = metaData.getTables( dbName, null, null, new String[] { "TABLE" } );
 
             try ( Statement st = conn.createStatement(); ) {
 
