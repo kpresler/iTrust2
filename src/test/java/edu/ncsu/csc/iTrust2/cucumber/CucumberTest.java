@@ -1,5 +1,8 @@
 package edu.ncsu.csc.iTrust2.cucumber;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -106,5 +109,20 @@ public abstract class CucumberTest {
         catch ( final Exception e ) {
         }
 
+    }
+
+    /**
+     * Asserts that the text is on the page
+     *
+     * @param text
+     *            text to check
+     */
+    protected void assertTextPresent ( final String text ) {
+        try {
+            assertTrue( driver.getPageSource().contains( text ) );
+        }
+        catch ( final Exception e ) {
+            fail();
+        }
     }
 }

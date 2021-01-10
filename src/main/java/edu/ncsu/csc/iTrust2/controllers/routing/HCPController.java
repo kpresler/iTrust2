@@ -54,17 +54,6 @@ public class HCPController {
     }
 
     /**
-     * Returns the page allowing HCPs to view and add reps for a patient
-     *
-     * @return The page to display
-     */
-    @GetMapping ( "/hcp/personalRepresentatives" )
-    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_OD', 'ROLE_OPH', 'ROLE_VIROLOGIST')" )
-    public String personalReps () {
-        return "/hcp/personalRepresentatives";
-    }
-
-    /**
      * Returns the ER for the given model
      *
      * @param model

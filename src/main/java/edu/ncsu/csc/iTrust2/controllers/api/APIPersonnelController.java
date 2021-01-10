@@ -139,7 +139,7 @@ public class APIPersonnelController extends APIController {
      * @return response and list of personnel matching query
      */
     @GetMapping ( BASE_PATH + "/personnel/getbyroles/{role}" )
-    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_ADMIN')" )
+    @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_ADMIN', 'ROLE_PATIENT')" )
     public ResponseEntity getPersonnelByRole ( @PathVariable ( "role" ) final String role ) {
         final List<Personnel> allPersonnel = (List<Personnel>) service.findAll();
 

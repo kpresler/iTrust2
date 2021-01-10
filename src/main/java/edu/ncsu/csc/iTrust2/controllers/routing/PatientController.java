@@ -24,10 +24,10 @@ public class PatientController {
      *            Data for the front end
      * @return The page the patient should see
      */
-    @GetMapping ( "/patient/appointmentRequest/manageAppointmentRequest" )
+    @GetMapping ( "/patient/manageAppointmentRequest" )
     @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
     public String requestAppointmentForm ( final Model model ) {
-        return "/patient/appointmentRequest/manageAppointmentRequest";
+        return "/patient/manageAppointmentRequest";
     }
 
     /**
