@@ -50,4 +50,9 @@ public class DefaultController {
                 .findAny().get();
         return new RedirectView( role.getLanding() );
     }
+
+    @RequestMapping ( value = "/viewEmails" )
+    public String getEmails ( final Model model ) {
+        return "viewEmails";
+    }
 }

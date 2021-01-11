@@ -97,7 +97,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // Allow anonymous access to the 3 mappings related to resetting a
         // forgotten password
         web.ignoring().antMatchers( "/api/v1/requestPasswordReset", "/api/v1/resetPassword/*", "/requestPasswordReset",
-                "/resetPassword", "/api/v1/generateUsers" );
+                "/resetPassword", "/api/v1/generateUsers", "/viewEmails", "/api/v1/emails" );
     }
 
     /**

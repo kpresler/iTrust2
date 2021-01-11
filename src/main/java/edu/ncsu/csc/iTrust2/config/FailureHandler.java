@@ -23,6 +23,7 @@ import edu.ncsu.csc.iTrust2.services.UserService;
 import edu.ncsu.csc.iTrust2.services.security.LoginAttemptService;
 import edu.ncsu.csc.iTrust2.services.security.LoginBanService;
 import edu.ncsu.csc.iTrust2.services.security.LoginLockoutService;
+import edu.ncsu.csc.iTrust2.utils.EmailUtil;
 import edu.ncsu.csc.iTrust2.utils.LoggerUtil;
 
 /**
@@ -37,6 +38,9 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Autowired
     private LoggerUtil          loggerUtil;
+
+    @Autowired
+    private EmailUtil           emailUtil;
 
     @Autowired
     private LoginBanService     loginBanService;
@@ -63,6 +67,10 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
         User user = null;
         final String addr = request.getRemoteAddr();
 
+        if ( username != null ) {
+            user = userService.findByName( username );
+        }
+
         if ( ae instanceof BadCredentialsException ) {
             // need to lockout IP
             if ( loginAttemptService.countByIP( addr ) >= 5 ) {
@@ -88,28 +96,7 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
                     loggerUtil.log( TransactionType.IP_LOCKOUT, addr, null, addr + " has been locked out for 1 hour." );
                     this.getRedirectStrategy().sendRedirect( request, response, "/login?iplocked" );
 
-                    // TODO: Emails are a Future Us problem
-
-                    // final String name = username;
-                    // final String email = EmailUtil.getEmailByUsername( name
-                    // );
-                    // if ( email != null ) {
-                    // try {
-                    // EmailUtil.sendEmail( email, "iTrust2: Your account has
-                    // beeen locked out",
-                    // "Your iTrust2 account has been locked out due to too many
-                    // failed log in attemtps." );
-                    // LoggerUtil.log( TransactionType.CREATE_LOCKOUT_EMAIL,
-                    // name );
-                    // }
-                    // catch ( final MessagingException e ) {
-                    // e.printStackTrace();
-                    // }
-                    // }
-                    // else {
-                    // LoggerUtil.log( TransactionType.CREATE_MISSING_EMAIL_LOG,
-                    // name );
-                    // }
+                    sendEmail( username );
                 }
                 return;
             }
@@ -140,26 +127,8 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
                         loggerUtil.log( TransactionType.USER_BANNED, username, null, username + " has been banned." );
                         this.getRedirectStrategy().sendRedirect( request, response, "/login?banned" );
 
-                        // final String name = username;
-                        // final String email = EmailUtil.getEmailByUsername(
-                        // name );
-                        // if ( email != null ) {
-                        // try {
-                        // EmailUtil.sendEmail( email, "iTrust2: Your account
-                        // has beeen locked out",
-                        // "Your iTrust2 account has been locked out due to too
-                        // many failed log in attemtps." );
-                        // LoggerUtil.log( TransactionType.CREATE_LOCKOUT_EMAIL,
-                        // name );
-                        // }
-                        // catch ( final MessagingException e ) {
-                        // e.printStackTrace();
-                        // }
-                        // }
-                        // else {
-                        // loggerUtil.log(
-                        // TransactionType.CREATE_MISSING_EMAIL_LOG, name );
-                        // }
+                        sendEmail( username );
+
                     }
                     else {
                         // lockout user
@@ -171,26 +140,7 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
                                 username + " has been locked out for 1 hour." );
                         this.getRedirectStrategy().sendRedirect( request, response, "/login?locked" );
 
-                        // final String name = username;
-                        // final String email = EmailUtil.getEmailByUsername(
-                        // name );
-                        // if ( email != null ) {
-                        // try {
-                        // EmailUtil.sendEmail( email, "iTrust2: Your account
-                        // has beeen locked out",
-                        // "Your iTrust2 account has been locked out due to too
-                        // many failed log in attemtps." );
-                        // LoggerUtil.log( TransactionType.CREATE_LOCKOUT_EMAIL,
-                        // name );
-                        // }
-                        // catch ( final MessagingException e ) {
-                        // e.printStackTrace();
-                        // }
-                        // }
-                        // else {
-                        // LoggerUtil.log(
-                        // TransactionType.CREATE_MISSING_EMAIL_LOG, name );
-                        // }
+                        sendEmail( username );
                     }
                     return;
                 }
@@ -225,6 +175,19 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
             return;
         }
         this.getRedirectStrategy().sendRedirect( request, response, "/login?error" );
+    }
+
+    private void sendEmail ( final String username ) {
+        final User user = userService.findByName( username );
+        if ( null != user ) {
+            emailUtil.sendEmail( user, "iTrust2: Your account has beeen locked out",
+                    "Your iTrust2 account has been locked out due to too many failed log in attempts." );
+            loggerUtil.log( TransactionType.CREATE_LOCKOUT_EMAIL, username );
+
+        }
+        else {
+            loggerUtil.log( TransactionType.CREATE_MISSING_EMAIL_LOG, username );
+        }
     }
 
 }
