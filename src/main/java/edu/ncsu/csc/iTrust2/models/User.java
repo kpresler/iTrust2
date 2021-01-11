@@ -18,6 +18,8 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import edu.ncsu.csc.iTrust2.forms.UserForm;
 import edu.ncsu.csc.iTrust2.models.enums.Role;
 
@@ -29,10 +31,14 @@ import edu.ncsu.csc.iTrust2.models.enums.Role;
  * references the User object for that user. This allows the iTrust2 system to
  * keep only what information is needed for a particular type of user.
  *
+ * Note use of JsonIgnoreProperties to make sure that even the (hashed) password
+ * isn't sent over the API when the Java objects are serialised to JSON.
+ *
  * @author Kai Presler-Marshall
  *
  */
 @Entity
+@JsonIgnoreProperties ( value = { "password" } )
 public class User extends DomainObject {
 
     /**
