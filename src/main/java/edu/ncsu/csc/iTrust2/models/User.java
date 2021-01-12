@@ -41,11 +41,6 @@ import edu.ncsu.csc.iTrust2.models.enums.Role;
 @JsonIgnoreProperties ( value = { "password" } )
 public class User extends DomainObject {
 
-    /**
-     * The UID of the user
-     */
-    private static final long serialVersionUID = 1L;
-
     /** For Hibernate */
     protected User () {
     }
