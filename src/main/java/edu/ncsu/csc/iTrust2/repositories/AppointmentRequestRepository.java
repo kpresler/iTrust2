@@ -13,4 +13,6 @@ public interface AppointmentRequestRepository extends JpaRepository<AppointmentR
 
     public List<AppointmentRequest> findByHcp ( User hcp );
 
+    public List<AppointmentRequest> findByHcpAndPatient ( User hcp, User patient );
+
 }

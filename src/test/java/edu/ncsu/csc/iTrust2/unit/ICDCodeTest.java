@@ -4,8 +4,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import org.junit.Test;
+import javax.transaction.Transactional;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import edu.ncsu.csc.iTrust2.TestConfig;
 import edu.ncsu.csc.iTrust2.forms.ICDCodeForm;
 import edu.ncsu.csc.iTrust2.models.ICDCode;
 
@@ -16,9 +23,13 @@ import edu.ncsu.csc.iTrust2.models.ICDCode;
  * @author Thomas
  *
  */
+@RunWith ( SpringRunner.class )
+@EnableAutoConfiguration
+@SpringBootTest ( classes = TestConfig.class )
 public class ICDCodeTest {
 
     @Test
+    @Transactional
     public void testCodes () {
         final ICDCodeForm form = new ICDCodeForm();
         form.setId( 1L );
@@ -42,6 +53,7 @@ public class ICDCodeTest {
     }
 
     @Test
+    @Transactional
     public void testInvalidCodes () {
         final ICDCodeForm form = new ICDCodeForm();
         form.setCode( "111" );

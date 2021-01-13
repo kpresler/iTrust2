@@ -32,4 +32,8 @@ public class AppointmentRequestService extends Service {
         return repository.findByHcp( hcp );
     }
 
+    public List<AppointmentRequest> findByHcpAndPatient ( final User hcp, final User patient ) {
+        return repository.findByHcpAndPatient( hcp, patient );
+    }
+
 }
