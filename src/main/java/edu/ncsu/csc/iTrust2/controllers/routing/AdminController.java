@@ -55,4 +55,30 @@ public class AdminController {
     public String manageHospital ( final Model model ) {
         return "/admin/hospitals";
     }
+
+    /**
+     * Retrieves the form for the Drugs action
+     *
+     * @param model
+     *            Data for front end
+     * @return The page to display
+     */
+    @RequestMapping ( value = "admin/drugs" )
+    @PreAuthorize ( "hasRole('ROLE_ADMIN')" )
+    public String drugs ( final Model model ) {
+        return "admin/drugs";
+    }
+
+    /**
+     * Add code
+     *
+     * @param model
+     *            data for front end
+     * @return mapping
+     */
+    @RequestMapping ( value = "admin/manageICDCodes" )
+    @PreAuthorize ( "hasRole('ROLE_ADMIN')" )
+    public String addCode ( final Model model ) {
+        return "/admin/manageICDCodes";
+    }
 }

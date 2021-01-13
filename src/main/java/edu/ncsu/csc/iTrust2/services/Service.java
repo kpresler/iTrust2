@@ -117,6 +117,10 @@ abstract public class Service {
 
     }
 
+    public boolean existsById ( final Object id ) {
+        return getRepository().existsById( id );
+    }
+
     public DomainObject findById ( final Object id ) {
         if ( null == id ) {
             return null;
