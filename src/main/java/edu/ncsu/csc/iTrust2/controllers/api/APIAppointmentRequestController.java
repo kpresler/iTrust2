@@ -135,7 +135,7 @@ public class APIAppointmentRequestController extends APIController {
     @PreAuthorize ( "hasRole('ROLE_PATIENT')" )
     public ResponseEntity createAppointmentRequest ( @RequestBody final AppointmentRequestForm requestForm ) {
         try {
-            final AppointmentRequest request = new AppointmentRequest( requestForm, userService );
+            final AppointmentRequest request = service.build( requestForm );
             if ( null != service.findById( request.getId() ) ) {
                 return new ResponseEntity(
                         errorResponse( "AppointmentRequest with the id " + request.getId() + " already exists" ),
@@ -204,9 +204,8 @@ public class APIAppointmentRequestController extends APIController {
     @PreAuthorize ( "hasAnyRole('ROLE_HCP', 'ROLE_PATIENT')" )
     public ResponseEntity updateAppointmentRequest ( @PathVariable final Long id,
             @RequestBody final AppointmentRequestForm requestF ) {
-
         try {
-            final AppointmentRequest request = new AppointmentRequest( requestF, userService );
+            final AppointmentRequest request = service.build( requestF );
             request.setId( id );
 
             if ( null != request.getId() && !id.equals( request.getId() ) ) {

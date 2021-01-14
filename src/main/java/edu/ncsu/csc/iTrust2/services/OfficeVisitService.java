@@ -17,6 +17,7 @@ import edu.ncsu.csc.iTrust2.models.AppointmentRequest;
 import edu.ncsu.csc.iTrust2.models.Diagnosis;
 import edu.ncsu.csc.iTrust2.models.OfficeVisit;
 import edu.ncsu.csc.iTrust2.models.Patient;
+import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.repositories.OfficeVisitRepository;
 
@@ -45,6 +46,18 @@ public class OfficeVisitService extends Service {
     @Override
     protected JpaRepository getRepository () {
         return repository;
+    }
+
+    public List<OfficeVisit> findByHcp ( final User hcp ) {
+        return repository.findByHcp( hcp );
+    }
+
+    public List<OfficeVisit> findByPatient ( final User patient ) {
+        return repository.findByPatient( patient );
+    }
+
+    public List<OfficeVisit> findByHcpAndPatient ( final User hcp, final User patient ) {
+        return repository.findByHcpAndPatient( hcp, patient );
     }
 
     public OfficeVisit build ( final OfficeVisitForm ovf ) {

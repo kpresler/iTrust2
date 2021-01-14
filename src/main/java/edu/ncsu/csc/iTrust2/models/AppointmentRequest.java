@@ -1,6 +1,5 @@
 package edu.ncsu.csc.iTrust2.models;
 
-import java.text.ParseException;
 import java.time.ZonedDateTime;
 
 import javax.persistence.Basic;
@@ -19,10 +18,8 @@ import com.google.gson.annotations.JsonAdapter;
 
 import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAdapter;
 import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAttributeConverter;
-import edu.ncsu.csc.iTrust2.forms.AppointmentRequestForm;
 import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.models.enums.Status;
-import edu.ncsu.csc.iTrust2.services.UserService;
 
 /**
  * Backing object for the Appointment Request system. This is the object that is
@@ -39,56 +36,6 @@ public class AppointmentRequest extends DomainObject {
      * Used so that Hibernate can construct and load objects
      */
     public AppointmentRequest () {
-    }
-
-    /**
-     * Handles conversion between an AppointmentRequestForm (the form with
-     * user-provided data) and an AppointmentRequest object that contains
-     * validated information These two classes are closely intertwined to handle
-     * validated persistent information and text-based information that is then
-     * displayed back to the user.
-     *
-     * @param raf
-     *            AppointmentRequestForm
-     * @throws ParseException
-     */
-    public AppointmentRequest ( final AppointmentRequestForm raf, final UserService userService )
-            throws ParseException {
-        setPatient( userService.findByName( raf.getPatient() ) );
-        setHcp( userService.findByName( raf.getHcp() ) );
-        setComments( raf.getComments() );
-
-        final ZonedDateTime requestDate = ZonedDateTime.parse( raf.getDate() );
-        if ( requestDate.isBefore( ZonedDateTime.now() ) ) {
-            throw new IllegalArgumentException( "Cannot request an appointment before the current time" );
-        }
-        setDate( requestDate );
-
-        Status s = null;
-        try {
-            s = Status.valueOf( raf.getStatus() );
-        }
-        catch ( final NullPointerException npe ) {
-            s = Status.PENDING; /*
-                                 * Incoming AppointmentRequests will come in
-                                 * from the form with no status. Set status to
-                                 * Pending until it is adjusted further
-                                 */
-        }
-        setStatus( s );
-        AppointmentType at = null;
-        try {
-            at = AppointmentType.valueOf( raf.getType() );
-        }
-        catch ( final NullPointerException npe ) {
-            at = AppointmentType.GENERAL_CHECKUP; /*
-                                                   * If for some reason we don't
-                                                   * have a type, default to
-                                                   * general checkup
-                                                   */
-        }
-        setType( at );
-
     }
 
     /**

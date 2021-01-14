@@ -220,7 +220,7 @@ public class AppointmentRequestStepDefs extends CucumberTest {
         form.setStatus( "PENDING" );
         form.setPatient( patientString );
 
-        final AppointmentRequest request = new AppointmentRequest( form, userService );
+        final AppointmentRequest request = service.build( form );
         service.save( request );
 
         // addAppointmentRequest( type, hcp, date, time, comments );
