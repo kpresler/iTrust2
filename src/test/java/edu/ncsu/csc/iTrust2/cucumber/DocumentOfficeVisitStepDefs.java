@@ -5,7 +5,11 @@ import static org.junit.Assert.fail;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -14,21 +18,40 @@ import org.openqa.selenium.WebElement;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.ncsu.csc.iTrust2.models.BasicHealthMetrics;
+import edu.ncsu.csc.iTrust2.models.Drug;
+import edu.ncsu.csc.iTrust2.models.Hospital;
+import edu.ncsu.csc.iTrust2.models.OfficeVisit;
 import edu.ncsu.csc.iTrust2.models.Patient;
+import edu.ncsu.csc.iTrust2.models.Prescription;
+import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.models.enums.HouseholdSmokingStatus;
 import edu.ncsu.csc.iTrust2.models.enums.PatientSmokingStatus;
 import edu.ncsu.csc.iTrust2.models.enums.State;
 import edu.ncsu.csc.iTrust2.services.BasicHealthMetricsService;
+import edu.ncsu.csc.iTrust2.services.DrugService;
+import edu.ncsu.csc.iTrust2.services.HospitalService;
+import edu.ncsu.csc.iTrust2.services.OfficeVisitService;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 public class DocumentOfficeVisitStepDefs extends CucumberTest {
 
+    private static final String       VIEW_URL = BASE_URL + "patient/officeVisit/viewPrescriptions";
+
+    private BasicHealthMetrics        expectedBhm;
+
     @Autowired
     private BasicHealthMetricsService bhmService;
 
-    private BasicHealthMetrics        expectedBhm;
+    @Autowired
+    private DrugService               drugService;
+
+    @Autowired
+    private OfficeVisitService        officeVisitService;
+
+    @Autowired
+    private HospitalService           hospitalService;
 
     /**
      * Fills in the date and time fields with the specified date and time.
@@ -197,6 +220,11 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
         driver.findElement( By.name( "submit" ) ).click();
     }
 
+    @When ( "I submit the office visit" )
+    public void submitOV () {
+        driver.findElement( By.name( "submit" ) ).click();
+    }
+
     @Then ( "The office visit is documented successfully" )
     public void documentedSuccessfully () {
         waitForAngular();
@@ -208,6 +236,8 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
         catch ( final Exception e ) {
             fail();
         }
+
+        Assert.assertEquals( 1, officeVisitService.count() );
     }
 
     /**
@@ -713,7 +743,102 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
         }
 
         waitForAngular();
-        final WebElement submit = driver.findElement( By.name( "submit" ) );
-        submit.click();
     }
+
+    @Given ( "^A drug named (.+) exists in iTrust2$" )
+    public void drugExists ( final String drugName ) {
+        final Drug drug = new Drug();
+        drug.setName( drugName );
+        drug.setCode( "1234-1234-12" );
+        drug.setDescription( "May induce haluncinations" );
+
+        drugService.save( drug );
+
+    }
+
+    @When ( "^I add a prescription for (.+) with a dosage of (.+) starting on (.+) and ending on (.+) with (.+) renewals$" )
+    public void addPrescription ( final String drug, final String dosage, final String startDate, final String endDate,
+            final String renewals ) {
+        waitForAngular();
+
+        enterValue( "dosageEntry", dosage );
+        fillInDate( "startEntry", startDate );
+        fillInDate( "endEntry", endDate );
+        enterValue( "renewalEntry", renewals );
+        selectName( drug );
+        driver.findElement( By.name( "fillPrescription" ) ).click();
+        assertEquals( "", driver.findElement( By.name( "errorMsg" ) ).getText() );
+    }
+
+    @Given ( "^I have been prescribed the drug (.+) with a dosage of (.+) starting on (.+) and ending on (.+) with (.+) renewals$" )
+    public void prescriptionAdded ( final String drug, final String dosage, final String startDate,
+            final String endDate, final String renewals ) {
+        final Drug drugObj = drugService.findByCode( "1234-1234-12" );
+
+        final Hospital hospital = hospitalService.findByName( "iTrust Test Hospital 2" );
+
+        final OfficeVisit visit = new OfficeVisit();
+        final BasicHealthMetrics bhm = new BasicHealthMetrics();
+
+        bhm.setDiastolic( 150 );
+        bhm.setDiastolic( 100 );
+        bhm.setHcp( userService.findByName( "hcp" ) );
+        bhm.setPatient( userService.findByName( "patient" ) );
+        bhm.setHdl( 75 );
+        bhm.setHeight( 75f );
+        bhm.setHouseSmokingStatus( HouseholdSmokingStatus.NONSMOKING );
+
+        visit.setBasicHealthMetrics( bhm );
+        visit.setType( AppointmentType.GENERAL_CHECKUP );
+        visit.setHospital( hospital );
+        visit.setPatient( userService.findByName( "patient" ) );
+        visit.setHcp( userService.findByName( "hcp" ) );
+        visit.setDate( ZonedDateTime.now() );
+        officeVisitService.save( visit );
+
+        officeVisitService.save( visit );
+
+        final Prescription pres = new Prescription();
+        pres.setDosage( 3 );
+        pres.setDrug( drugObj );
+
+        final LocalDate now = LocalDate.now();
+        pres.setEndDate( now.plus( Period.ofWeeks( 5 ) ) );
+        pres.setPatient( userService.findByName( "patient" ) );
+        pres.setStartDate( now );
+        pres.setRenewals( 5 );
+
+        final List<Prescription> pr = new ArrayList<Prescription>();
+        pr.add( pres );
+        visit.setPrescriptions( pr );
+
+        officeVisitService.save( visit );
+
+    }
+
+    @Then ( "^I see a prescription for (.+) with a dosage of (.+) starting on (.+) and ending on (.+) with (.+) renewals$" )
+    public void prescriptionVisible ( final String drug, final String dosage, final String startDate,
+            final String endDate, final String renewals ) {
+        waitForAngular();
+        final List<WebElement> rows = driver.findElements( By.name( "prescriptionTableRow" ) );
+
+        List<WebElement> data = null;
+        for ( final WebElement r : rows ) {
+            if ( r.getText().contains( drug ) ) {
+                waitForAngular();
+                data = r.findElements( By.tagName( "td" ) );
+                break;
+            }
+        }
+
+        assertEquals( drug, data.get( 0 ).getText() );
+        assertEquals( dosage, data.get( 1 ).getText() );
+        assertEquals( renewals, data.get( 4 ).getText() );
+    }
+
+    @When ( "I choose to view my prescriptions" )
+    public void viewPrescriptions () {
+        driver.get( VIEW_URL );
+    }
+
 }

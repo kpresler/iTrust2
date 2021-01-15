@@ -3,6 +3,7 @@ package edu.ncsu.csc.iTrust2.models;
 import java.time.LocalDate;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -58,8 +59,9 @@ public class Prescription extends DomainObject {
     private int       renewals;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne ( cascade = CascadeType.ALL )
     @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
+
     private User      patient;
 
     /**

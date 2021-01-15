@@ -48,6 +48,7 @@ Given The patient has name: <name> and date of birth: <dob>
 When I log in as hcp
 When I navigate to the Document Office Visit page
 When I fill in information on the office visit for people 12 and over with date: <date>, weight: <weight>, height: <height>, systolic blood pressure: <sys>, diastolic blood pressure: <dia>, household smoking status: <houseSmoking>, patient smoking status: <patientSmoking>, HDL cholesterol: <HDL>, LDL cholesterol: <LDL>, triglycerides: <triglycerides>, and note: <note>
+When I submit the office visit
 Then The office visit is documented successfully
 And The basic health metrics for the adult are correct
 
@@ -65,6 +66,7 @@ Given The patient has name: <name> and date of birth: <dob>
 When I log in as hcp
 When I navigate to the Document Office Visit page
 When I fill in information on the office visit for people 12 and over with date: <date>, weight: <weight>, height: <height>, systolic blood pressure: <sys>, diastolic blood pressure: <dia>, household smoking status: <houseSmoking>, patient smoking status: <patientSmoking>, HDL cholesterol: <HDL>, LDL cholesterol: <LDL>, triglycerides: <triglycerides>, and note: <note>
+When I submit the office visit
 Then The office visit is not documented
 
 Examples:

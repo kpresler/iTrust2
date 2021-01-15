@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,21 @@ public abstract class CucumberTest {
 
     @Autowired
     protected UserService userService;
+
+    /* Common steps */
+
+    protected void enterValue ( final String name, final String value ) {
+        final WebElement field = driver.findElement( By.name( name ) );
+        field.clear();
+        field.sendKeys( String.valueOf( value ) );
+    }
+
+    protected void selectName ( final String name ) {
+        final WebElement element = driver.findElement( By.cssSelector( "input[name='" + name + "']" ) );
+        element.click();
+    }
+
+    /* Selenium setup stuff */
 
     static {
         ChromeDriverManager.chromedriver().setup();
@@ -125,4 +141,5 @@ public abstract class CucumberTest {
             fail();
         }
     }
+
 }
