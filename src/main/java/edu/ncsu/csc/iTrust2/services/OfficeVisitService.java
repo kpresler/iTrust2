@@ -43,6 +43,9 @@ public class OfficeVisitService extends Service {
     @Autowired
     private PrescriptionService       prescriptionService;
 
+    @Autowired
+    private DiagnosisService          diagnosisService;
+
     @Override
     protected JpaRepository getRepository () {
         return repository;
@@ -110,7 +113,8 @@ public class OfficeVisitService extends Service {
 
         // associate all diagnoses with this visit
         if ( ovf.getDiagnoses() != null ) {
-            ov.setDiagnoses( ovf.getDiagnoses() );
+            ov.setDiagnoses(
+                    ovf.getDiagnoses().stream().map( diagnosisService::build ).collect( Collectors.toList() ) );
             for ( final Diagnosis d : ov.getDiagnoses() ) {
                 d.setVisit( ov );
             }

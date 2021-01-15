@@ -9,7 +9,6 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
-import edu.ncsu.csc.iTrust2.models.Diagnosis;
 import edu.ncsu.csc.iTrust2.models.OfficeVisit;
 import edu.ncsu.csc.iTrust2.models.enums.HouseholdSmokingStatus;
 import edu.ncsu.csc.iTrust2.models.enums.PatientSmokingStatus;
@@ -137,7 +136,7 @@ public class OfficeVisitForm implements Serializable {
     /**
      * Diagnoses associated with this visit
      */
-    private List<Diagnosis>        diagnoses;
+    private List<DiagnosisForm>    diagnoses;
 
     private List<PrescriptionForm> prescriptions;
 
@@ -154,7 +153,7 @@ public class OfficeVisitForm implements Serializable {
         setNotes( ov.getNotes() );
         setId( ov.getId().toString() );
         setPreScheduled( ( (Boolean) ( ov.getAppointment() != null ) ).toString() );
-        setDiagnoses( new ArrayList<Diagnosis>() );
+        setDiagnoses( new ArrayList<DiagnosisForm>() );
         setPrescriptions( ov.getPrescriptions().stream().map( PrescriptionForm::new ).collect( Collectors.toList() ) );
     }
 
@@ -506,7 +505,7 @@ public class OfficeVisitForm implements Serializable {
      * @param list
      *            The list of Diagnoses.
      */
-    public void setDiagnoses ( final List<Diagnosis> list ) {
+    public void setDiagnoses ( final List<DiagnosisForm> list ) {
         diagnoses = list;
     }
 
@@ -515,7 +514,7 @@ public class OfficeVisitForm implements Serializable {
      *
      * @return The list of Diagnoses
      */
-    public List<Diagnosis> getDiagnoses () {
+    public List<DiagnosisForm> getDiagnoses () {
         return diagnoses;
     }
 

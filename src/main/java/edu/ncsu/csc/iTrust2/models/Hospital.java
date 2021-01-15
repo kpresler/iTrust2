@@ -189,4 +189,9 @@ public class Hospital extends DomainObject implements Serializable {
         return s;
     }
 
+    @Override
+    public Serializable getId () {
+        return getName();
+    }
+
 }

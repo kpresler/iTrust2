@@ -799,14 +799,14 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
         officeVisitService.save( visit );
 
         final Prescription pres = new Prescription();
-        pres.setDosage( 3 );
+        pres.setDosage( Integer.valueOf( dosage ) );
         pres.setDrug( drugObj );
 
         final LocalDate now = LocalDate.now();
         pres.setEndDate( now.plus( Period.ofWeeks( 5 ) ) );
         pres.setPatient( userService.findByName( "patient" ) );
         pres.setStartDate( now );
-        pres.setRenewals( 5 );
+        pres.setRenewals( Integer.valueOf( renewals ) );
 
         final List<Prescription> pr = new ArrayList<Prescription>();
         pr.add( pres );

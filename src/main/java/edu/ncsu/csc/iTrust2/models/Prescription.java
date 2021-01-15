@@ -61,7 +61,6 @@ public class Prescription extends DomainObject {
     @NotNull
     @ManyToOne ( cascade = CascadeType.ALL )
     @JoinColumn ( name = "patient_id", columnDefinition = "varchar(100)" )
-
     private User      patient;
 
     /**

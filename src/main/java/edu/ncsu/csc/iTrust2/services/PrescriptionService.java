@@ -1,6 +1,7 @@
 package edu.ncsu.csc.iTrust2.services;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import edu.ncsu.csc.iTrust2.forms.PrescriptionForm;
 import edu.ncsu.csc.iTrust2.models.Prescription;
+import edu.ncsu.csc.iTrust2.models.User;
 import edu.ncsu.csc.iTrust2.repositories.PrescriptionRepository;
 
 @Component
@@ -46,6 +48,10 @@ public class PrescriptionService extends Service {
         pr.setEndDate( LocalDate.parse( form.getEndDate() ) );
 
         return pr;
+    }
+
+    public List<Prescription> findByPatient ( final User patient ) {
+        return repository.findByPatient( patient );
     }
 
 }

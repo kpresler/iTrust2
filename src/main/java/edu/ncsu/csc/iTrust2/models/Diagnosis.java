@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 /**
  * Class to represent a Diagnosis made by an HCP as part of an Office Visit
  *
@@ -23,6 +25,7 @@ public class Diagnosis extends DomainObject {
     @NotNull
     @ManyToOne
     @JoinColumn ( name = "visit_id", nullable = false )
+    @JsonBackReference
     private OfficeVisit visit;
 
     private String      note;
@@ -36,6 +39,7 @@ public class Diagnosis extends DomainObject {
     @JoinColumn ( name = "code_id" )
     private ICDCode     code;
 
+    @Override
     public Long getId () {
         return id;
     }

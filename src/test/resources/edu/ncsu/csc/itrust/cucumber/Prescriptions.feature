@@ -42,15 +42,16 @@ Examples:
 
 
 
-#Scenario Outline: View Prescriptions
-	#Given A hospital exists in iTrust2
-    #Given An HCP exists in iTrust2
-    #Given A Patient exists in iTrust2
-    #Given A drug named <prescription> exists in iTrust2
-    #Given I have been prescribed the drug <prescription> with a dosage of <dosage> starting on <start> and ending on <end> with <renewals> renewals
-	#When I choose to view my prescriptions
-	#Then I see a prescription for <prescription> with a dosage of <dosage> starting on <start> and ending on <end> with <renewals> renewals
+Scenario Outline: View Prescriptions
+	Given A hospital exists in iTrust2
+    Given An HCP exists in iTrust2
+    Given A Patient exists in iTrust2
+    Given A drug named <prescription> exists in iTrust2
+    Given I have been prescribed the drug <prescription> with a dosage of <dosage> starting on <start> and ending on <end> with <renewals> renewals
+	When I log in as patient
+	When I choose to view my prescriptions
+	Then I see a prescription for <prescription> with a dosage of <dosage> starting on <start> and ending on <end> with <renewals> renewals
 
-#Examples:
-	#| user  | prescription      | dosage | start      | end        | renewals |
-	#| patient | Quetiane Fumarate | 100    | 12/15/2017 | 12/14/2018 | 12       |
+Examples:
+	| user  | prescription      | dosage | start      | end        | renewals |
+	| patient | Quetiane Fumarate | 100    | 12/15/2017 | 12/14/2018 | 12       |

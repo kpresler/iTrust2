@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.google.gson.annotations.JsonAdapter;
 
 import edu.ncsu.csc.iTrust2.adapters.ZonedDateTimeAdapter;
@@ -94,7 +95,7 @@ public class OfficeVisit extends DomainObject {
      * loop
      */
     @OneToMany ( cascade = CascadeType.ALL )
-    @JoinColumn ( name = "diagnoses_id" )
+    @JsonManagedReference
     private List<Diagnosis>    diagnoses;
 
     /**
@@ -110,6 +111,7 @@ public class OfficeVisit extends DomainObject {
     private AppointmentRequest appointment;
 
     @OneToMany ( cascade = CascadeType.ALL )
+    @JsonManagedReference
     private List<Prescription> prescriptions;
 
     /** For Hibernate/Thymeleaf _must_ be an empty constructor */
@@ -233,6 +235,7 @@ public class OfficeVisit extends DomainObject {
      *
      * @return the id of this office visit
      */
+    @Override
     public Long getId () {
         return id;
     }
