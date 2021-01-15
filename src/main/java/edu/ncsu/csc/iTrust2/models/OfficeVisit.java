@@ -110,7 +110,6 @@ public class OfficeVisit extends DomainObject {
     private AppointmentRequest appointment;
 
     @OneToMany ( cascade = CascadeType.ALL )
-    @JoinColumn ( name = "prescriptions_id" )
     private List<Prescription> prescriptions;
 
     /** For Hibernate/Thymeleaf _must_ be an empty constructor */

@@ -15,6 +15,8 @@ import edu.ncsu.csc.iTrust2.models.enums.AppointmentType;
 import edu.ncsu.csc.iTrust2.models.enums.BloodType;
 import edu.ncsu.csc.iTrust2.models.enums.Ethnicity;
 import edu.ncsu.csc.iTrust2.models.enums.Gender;
+import edu.ncsu.csc.iTrust2.models.enums.HouseholdSmokingStatus;
+import edu.ncsu.csc.iTrust2.models.enums.PatientSmokingStatus;
 import edu.ncsu.csc.iTrust2.models.enums.Role;
 import edu.ncsu.csc.iTrust2.models.enums.State;
 import edu.ncsu.csc.iTrust2.models.enums.Status;
@@ -109,6 +111,30 @@ public class APIEnumController extends APIController {
     @GetMapping ( BASE_PATH + "/appointmentstatus" )
     public List<Status> getAppointmentStatuses () {
         return Arrays.asList( Status.values() );
+    }
+
+    /**
+     * Get house smoking statuses
+     *
+     * @return house smoking statuses
+     */
+    @GetMapping ( BASE_PATH + "/housesmoking" )
+    public List<HouseholdSmokingStatus> getHouseSmokingStatuses () {
+        final List<HouseholdSmokingStatus> ret = Arrays.asList( HouseholdSmokingStatus.values() ).subList( 1,
+                HouseholdSmokingStatus.values().length );
+        return ret;
+    }
+
+    /**
+     * Get patient smoking statuses
+     *
+     * @return patient smoking statuses
+     */
+    @GetMapping ( BASE_PATH + "/patientsmoking" )
+    public List<PatientSmokingStatus> getPatientSmokingStatuses () {
+        final List<PatientSmokingStatus> ret = Arrays.asList( PatientSmokingStatus.values() ).subList( 1,
+                PatientSmokingStatus.values().length );
+        return ret;
     }
 
 }
