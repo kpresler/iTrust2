@@ -53,49 +53,6 @@ public class DocumentOfficeVisitStepDefs extends CucumberTest {
     @Autowired
     private HospitalService           hospitalService;
 
-    /**
-     * Fills in the date and time fields with the specified date and time.
-     *
-     * @param date
-     *            The date to enter.
-     * @param time
-     *            The time to enter.
-     */
-    private void fillInDateTime ( final String dateField, final String date, final String timeField,
-            final String time ) {
-        fillInDate( dateField, date );
-        fillInTime( timeField, time );
-    }
-
-    /**
-     * Fills in the date field with the specified date.
-     *
-     * @param date
-     *            The date to enter.
-     */
-    private void fillInDate ( final String dateField, final String date ) {
-        driver.findElement( By.name( dateField ) ).clear();
-        final WebElement dateElement = driver.findElement( By.name( dateField ) );
-        dateElement.sendKeys( date.replace( "/", "" ) );
-    }
-
-    /**
-     * Fills in the time field with the specified time.
-     *
-     * @param time
-     *            The time to enter.
-     */
-    private void fillInTime ( final String timeField, String time ) {
-        // Zero-pad the time for entry
-        if ( time.length() == 7 ) {
-            time = "0" + time;
-        }
-
-        driver.findElement( By.name( timeField ) ).clear();
-        final WebElement timeElement = driver.findElement( By.name( timeField ) );
-        timeElement.sendKeys( time.replace( ":", "" ).replace( " ", "" ) );
-    }
-
     @When ( "I navigate to the Document Office Visit page" )
     public void navigateDocumentOV () {
         ( (JavascriptExecutor) driver ).executeScript( "document.getElementById('documentOfficeVisit').click();" );

@@ -17,7 +17,7 @@ import io.cucumber.junit.CucumberOptions;
  *
  */
 @RunWith ( Cucumber.class )
-@CucumberOptions ( features = "src/test/resources/edu/ncsu/csc/itrust/cucumber/HCPEditPatientDemographics.feature" )
+@CucumberOptions ( features = "src/test/resources/edu/ncsu/csc/itrust/cucumber/" )
 public class TestRunner {
 
     @BeforeClass

@@ -32,9 +32,11 @@ public class HCPEditPatientStepDefs extends CucumberTest {
 
     @Given ( "^Jim Nellie and Shelly exist$" )
     public void loadRequiredUsers () throws ParseException {
-        attemptLogout();
-
         // make sure the users we need to login exist
+
+        final User svang = new Personnel( new UserForm( "svang", "123456", Role.ROLE_HCP, 1 ) );
+
+        userService.save( svang );
 
         final Patient jbean = new Patient( new UserForm( "jbean", "123456", Role.ROLE_PATIENT, 1 ) );
         jbean.setFirstName( "Jim" );
@@ -72,10 +74,6 @@ public class HCPEditPatientStepDefs extends CucumberTest {
 
         userService.save( nsanderson );
 
-        final User svang = new Personnel( new UserForm( "svang", "123456", Role.ROLE_HCP, 1 ) );
-
-        userService.save( svang );
-
     }
 
     @Given ( "^Dr Shelly Vang has logged in and chosen to edit a patient$" )
@@ -83,6 +81,7 @@ public class HCPEditPatientStepDefs extends CucumberTest {
         attemptLogout();
 
         driver.get( BASE_URL );
+        waitForAngular();
         enterValue( "username", "svang" );
         enterValue( "password", "123456" );
         driver.findElement( By.className( "btn" ) ).click();
