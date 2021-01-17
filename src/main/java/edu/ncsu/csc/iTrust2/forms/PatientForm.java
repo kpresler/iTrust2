@@ -2,11 +2,11 @@ package edu.ncsu.csc.iTrust2.forms;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import edu.ncsu.csc.iTrust2.models.Patient;
 
